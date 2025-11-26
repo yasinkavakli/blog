@@ -1,0 +1,113 @@
+---
+
+---
+
+<button
+  id="theme-toggle"
+  aria-label="Toggle theme"
+  class="bg-transparent border-none cursor-pointer flex items-center justify-center transition-colors hover:text-white"
+>
+  <svg
+    class="sun-icon hidden"
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.41 1.41"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.41"></path>
+  </svg>
+  <svg
+    class="moon-icon hidden"
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
+  <svg
+    class="system-icon hidden"
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect width="20" height="14" x="2" y="3" rx="2"></rect>
+    <line x1="8" x2="16" y1="21" y2="21"></line>
+    <line x1="12" x2="12" y1="17" y2="21"></line>
+  </svg>
+</button>
+
+<style>
+  :global(html[data-theme="light"]) .sun-icon {
+    @apply block;
+  }
+
+  :global(html[data-theme="dark"]) .moon-icon {
+    @apply block;
+  }
+
+  :global(html[data-theme="system"]) .system-icon {
+    @apply block;
+  }
+</style>
+
+<script>
+  function toggleTheme() {
+    const current =
+      document.documentElement.getAttribute("data-theme") || "system";
+    const next =
+      current === "system" ? "light" : current === "light" ? "dark" : "system";
+
+    // Update data-theme attribute for icon display
+    document.documentElement.setAttribute("data-theme", next);
+
+    // Update Tailwind's dark class
+    const isDark =
+      next === "dark" ||
+      (next === "system" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.toggle("dark", isDark);
+
+    // Save preference
+    localStorage.setItem("theme", next);
+  }
+
+  // Listen for system theme changes
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      const theme = document.documentElement.getAttribute("data-theme");
+      if (theme === "system") {
+        document.documentElement.classList.toggle("dark", e.matches);
+      }
+    });
+
+  // Add click handler
+  document
+    .getElementById("theme-toggle")
+    ?.addEventListener("click", toggleTheme);
+</script>

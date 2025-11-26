@@ -1,0 +1,96 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SocialsIllustration from "../components/SocialsIllustration.astro";
+import EmptyStateIllustration from "../components/EmptyStateIllustration.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const recentPosts = posts.slice(0, 5);
+
+const breadcrumbs = [{ label: "About" }];
+---
+
+<BaseLayout 
+	title="Yasin Kavakli" 
+	description="Senior developer building scalable B2B ecommerce solutions"
+	ogImage="/og/home.png" 
+	breadcrumbs={breadcrumbs}
+>
+	<main class="w-full max-w-xl px-4">
+		<div class="flex flex-col gap-12 py-8">
+			<!-- About Section -->
+			<section class="flex flex-col gap-4">
+				<h1 class="text-2xl font-semibold tracking-tight">
+					Hey, I'm Yasin.
+				</h1>
+				<p class="text-muted-foreground leading-relaxed m-0">
+					I'm a senior developer building scalable B2B ecommerce
+					solutions, currently at one of Austria's biggest B2B
+					webshops.
+				</p>
+				<p class="text-muted-foreground leading-relaxed m-0">
+					I specialize in front-end development, design systems, and
+					user experience. This blog is my digital garden—a place
+					where I share my thoughts, learnings, and projects.
+				</p>
+			</section>
+
+			<!-- Online Section -->
+			<SocialsIllustration />
+
+			<!-- Recent Writing Section -->
+			<section class="flex flex-col gap-4">
+				<div class="text-muted-foreground/60 text-sm select-none">
+					Writing
+				</div>
+				{
+					recentPosts.length > 0 ? (
+						<>
+							<ul class="list-none p-0 m-0 flex flex-col gap-1">
+								{recentPosts.map((post) => (
+									<li>
+										<a
+											href={`/blog/${post.id}/`}
+											class="flex items-center gap-2 py-1.5 group"
+										>
+											<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2 flex-1">
+												{post.data.title}
+											</span>
+											<span class="text-muted-foreground/60 text-xs font-mono tracking-tight">
+												{post.data.pubDate
+													.toLocaleDateString(
+														"en-us",
+														{
+															year: "2-digit",
+															month: "short",
+														},
+													)
+													.replace(" ", " '")}
+											</span>
+										</a>
+									</li>
+								))}
+							</ul>
+							<a
+								href="/blog"
+								class="text-muted-foreground text-sm hover:text-foreground transition-colors w-fit"
+							>
+								View all →
+							</a>
+						</>
+					) : (
+						<div class="flex flex-col items-center gap-6 py-8">
+							<EmptyStateIllustration />
+							<p class="text-muted-foreground/60 text-sm text-center">
+								Still drafting... Check back soon!
+							</p>
+						</div>
+					)
+				}
+			</section>
+		</div>
+	</main>
+</BaseLayout>

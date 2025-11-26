@@ -1,0 +1,78 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// Redirect to home if no posts exist
+if (posts.length === 0) {
+	return Astro.redirect("/");
+}
+
+// Group posts by year
+const postsByYear = posts.reduce(
+	(acc, post) => {
+		const year = post.data.pubDate.getFullYear();
+		if (!acc[year]) {
+			acc[year] = [];
+		}
+		acc[year].push(post);
+		return acc;
+	},
+	{} as Record<number, typeof posts>,
+);
+
+const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
+
+const breadcrumbs = [{ label: "Writing" }];
+---
+
+<BaseLayout title="Writing | Yasin Kavakli" description="Thoughts on software, design, and everything in between." ogImage="/og/writing.png" breadcrumbs={breadcrumbs}>
+	<main class="w-full max-w-xl px-4">
+		<div class="flex flex-col gap-12 py-8">
+			<!-- Header -->
+			<section class="flex flex-col gap-2">
+				<h1 class="text-foreground m-0">Writing</h1>
+				<p class="text-muted-foreground m-0">
+					Thoughts on software, design, and everything in between.
+				</p>
+			</section>
+
+		<!-- Posts by Year -->
+		{
+			years.map((year) => (
+				<section class="flex flex-col gap-4">
+					<div class="text-muted-foreground/60 text-sm select-none">
+						{year}
+					</div>
+					<ul class="list-none p-0 m-0 flex flex-col gap-1">
+						{postsByYear[Number(year)].map((post) => (
+							<li>
+								<a
+									href={`/blog/${post.id}/`}
+									class="flex items-center gap-2 py-1.5 group"
+								>
+									<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2 flex-1">
+										{post.data.title}
+									</span>
+									<span class="text-muted-foreground/60 text-xs font-mono tracking-tight">
+										{post.data.pubDate.toLocaleDateString(
+											"en-us",
+											{
+												month: "short",
+												day: "numeric",
+											},
+										)}
+									</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			))
+		}
+		</div>
+	</main>
+</BaseLayout>

@@ -1,0 +1,264 @@
+---
+// Socials Illustration Component
+// Similar style to the blueprint illustration with interactive hover effects
+// Shows X.com and GitHub logos on left and right with connected social handles outside
+---
+
+<section class="flex flex-col gap-4">
+	<div class="text-muted-foreground/60 text-sm select-none">Socials</div>
+
+	<!-- Socials Container with Illustration and Text -->
+	<div class="flex items-center justify-center gap-8 py-6">
+		<!-- Left Social: X/Twitter -->
+		<a
+			href="https://x.com/yasinkavakliat"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="flex flex-col items-center gap-2 group/x cursor-pointer"
+		>
+			<svg
+				width="80"
+				height="80"
+				viewBox="0 0 80 80"
+				fill="none"
+				class="text-muted-foreground/40 transition-colors duration-300 group-hover/x:text-primary"
+			>
+				<!-- Grid lines (blueprint style) -->
+				<line
+					x1="0"
+					y1="20"
+					x2="80"
+					y2="20"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="0"
+					y1="40"
+					x2="80"
+					y2="40"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="0"
+					y1="60"
+					x2="80"
+					y2="60"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="20"
+					y1="0"
+					x2="20"
+					y2="80"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="40"
+					y1="0"
+					x2="40"
+					y2="80"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="60"
+					y1="0"
+					x2="60"
+					y2="80"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+
+				<!-- Logo container circle -->
+				<circle
+					cx="40"
+					cy="40"
+					r="20"
+					stroke="currentColor"
+					stroke-width="1.5"
+					stroke-width="1.5"
+					class="logo-circle transition-all duration-300 fill-white dark:fill-sidebar group-hover/x:stroke-primary group-hover/x:stroke-2"
+				></circle>
+
+				<!-- X/Twitter Logo -->
+				<svg
+					x="22"
+					y="22"
+					width="36"
+					height="36"
+					viewBox="0 0 24 24"
+					fill="none"
+					class="logo-icon"
+				>
+					<path
+						d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+						fill="currentColor"
+						opacity="0.7"
+						class="logo-path transition-all duration-300 group-hover/x:opacity-100 group-hover/x:fill-primary"
+					></path>
+				</svg>
+			</svg>
+
+			<!-- Text below illustration -->
+			<div class="text-center">
+				<p
+					class="text-xs text-muted-foreground/60 transition-opacity duration-300 group-hover/x:opacity-100 group-hover/x:text-muted-foreground"
+				>
+					X / Twitter
+				</p>
+				<p
+					class="text-sm font-medium text-muted-foreground transition-opacity duration-300 group-hover/x:opacity-100 group-hover/x:text-foreground"
+				>
+					@yasinkavakliat
+				</p>
+			</div>
+		</a>
+
+		<!-- Center decorative element -->
+		<div class="flex flex-col items-center gap-2">
+			<div class="w-1 h-12 bg-muted-foreground/20"></div>
+			<div class="w-1 h-1 rounded-full bg-muted-foreground/40"></div>
+			<div class="w-1 h-12 bg-muted-foreground/20"></div>
+		</div>
+
+		<!-- Right Social: GitHub -->
+		<a
+			href="https://github.com/yasinkavakli"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="flex flex-col items-center gap-2 group/github cursor-pointer"
+		>
+			<svg
+				width="80"
+				height="80"
+				viewBox="0 0 80 80"
+				fill="none"
+				class="text-muted-foreground/40 transition-colors duration-300 group-hover/github:text-primary"
+			>
+				<!-- Grid lines (blueprint style) -->
+				<line
+					x1="0"
+					y1="20"
+					x2="80"
+					y2="20"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="0"
+					y1="40"
+					x2="80"
+					y2="40"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="0"
+					y1="60"
+					x2="80"
+					y2="60"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="20"
+					y1="0"
+					x2="20"
+					y2="80"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="40"
+					y1="0"
+					x2="40"
+					y2="80"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+				<line
+					x1="60"
+					y1="0"
+					x2="60"
+					y2="80"
+					stroke="currentColor"
+					stroke-width="1"
+					stroke-dasharray="4 4"></line>
+
+				<!-- Logo container circle -->
+				<circle
+					cx="40"
+					cy="40"
+					r="20"
+					stroke="currentColor"
+					stroke-width="1.5"
+					class="logo-circle transition-all duration-300 fill-white dark:fill-sidebar group-hover/github:stroke-primary group-hover/github:stroke-2"
+				></circle>
+
+				<!-- GitHub Logo -->
+				<svg
+					x="20"
+					y="20"
+					width="40"
+					height="40"
+					viewBox="0 0 24 24"
+					fill="none"
+					class="logo-icon"
+				>
+					<path
+						fill-rule="evenodd"
+						clip-rule="evenodd"
+						d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+						fill="currentColor"
+						opacity="0.7"
+						class="logo-path transition-all duration-300 group-hover/github:opacity-100 group-hover/github:fill-primary"
+					></path>
+				</svg>
+			</svg>
+
+			<!-- Text below illustration -->
+			<div class="text-center">
+				<p
+					class="text-xs text-muted-foreground/60 transition-opacity duration-300 group-hover/github:opacity-100 group-hover/github:text-muted-foreground"
+				>
+					GitHub
+				</p>
+				<p
+					class="text-sm font-medium text-muted-foreground transition-opacity duration-300 group-hover/github:opacity-100 group-hover/github:text-foreground"
+				>
+					@yasinkavakli
+				</p>
+			</div>
+		</a>
+	</div>
+
+	<!-- Social Links for accessibility/SEO -->
+	<!-- <ul class="list-none p-0 m-0 flex flex-col gap-1">
+		<li>
+			<a 
+				href="https://x.com/yasinkavakliat" 
+				target="_blank" 
+				rel="noopener noreferrer" 
+				class="flex items-center gap-2 py-1.5 group"
+			>
+				<span class="text-foreground" set:html={`<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="currentColor"></path></svg>`} />
+				<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2">yasinkavakliat</span>
+			</a>
+		</li>
+		<li>
+			<a 
+				href="https://github.com/yasinkavakli" 
+				target="_blank" 
+				rel="noopener noreferrer" 
+				class="flex items-center gap-2 py-1.5 group"
+			>
+				<span class="text-foreground" set:html={`<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" fill="currentColor"></path></svg>`} />
+				<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2">yasinkavakli</span>
+			</a>
+		</li>
+	</ul> -->
+</section>

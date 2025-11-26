@@ -1,0 +1,69 @@
+---
+import "../styles/global.css";
+import BaseHead from "../components/BaseHead.astro";
+import LayoutWrapper from "../components/layout-wrapper.tsx";
+import { getImage } from "astro:assets";
+import avatarSrc from "../../public/assets/avatar.png";
+import { hasBlogPosts } from "../lib/blog-utils";
+
+interface Props {
+	title: string;
+	description?: string;
+	ogImage?: string;
+	breadcrumbs?: { label: string; href?: string }[];
+}
+
+const {
+	title,
+	description = "A minimal blog.",
+	ogImage,
+	breadcrumbs,
+} = Astro.props;
+
+const optimizedAvatar = await getImage({
+	src: avatarSrc,
+	width: 64,
+	height: 64,
+	format: "webp",
+});
+
+const blogPostsExist = await hasBlogPosts();
+---
+
+<!doctype html>
+<html lang="en" class="antialiased bg-sidebar dark:bg-sidebar">
+	<head>
+		<BaseHead title={title} description={description} ogImage={ogImage} />
+		<script is:inline>
+			function updateTheme() {
+				const theme = localStorage.getItem("theme") || "system";
+				const systemDark = window.matchMedia(
+					"(prefers-color-scheme: dark)",
+				).matches;
+				const isDark =
+					theme === "dark" || (theme === "system" && systemDark);
+
+				document.documentElement.classList.toggle("dark", isDark);
+				document.documentElement.setAttribute("data-theme", theme);
+			}
+
+			// Initialize
+			updateTheme();
+
+			// Listen for system theme changes
+			window
+				.matchMedia("(prefers-color-scheme: dark)")
+				.addEventListener("change", updateTheme);
+		</script>
+	</head>
+	<body class="min-h-svh">
+		<LayoutWrapper
+			client:idle
+			breadcrumbs={breadcrumbs}
+			avatarSrc={optimizedAvatar.src}
+			hasBlogPosts={blogPostsExist}
+		>
+			<slot />
+		</LayoutWrapper>
+	</body>
+</html>
