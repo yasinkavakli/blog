@@ -176,6 +176,7 @@ Contributions are welcome! Feel free to:
 - [Astro](https://astro.build) - The amazing framework
 - [Shadcn UI](https://ui.shadcn.com) - Beautiful components
 - [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS
+- [Brian's Blog](https://brianlovin.com) - Design and layout inspiration
 - Inspired by minimalist design principles
 
 ---
