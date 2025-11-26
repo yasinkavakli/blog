@@ -4,21 +4,21 @@ A modern, lightweight, open-source blog built with [Astro](https://astro.build),
 
 **Live:** https://yasin.kavakli.at
 
-## ✨ Features
+## Features
 
-- **⚡ Lightning-fast** - Static site generation with 100/100 Lighthouse performance
-- **🌓 Dark Mode** - Automatic theme switching with persistent user preferences
-- **📱 Responsive Design** - Beautiful on all devices with Tailwind CSS
-- **📝 Content Collections** - Type-safe markdown/MDX blog posts with frontmatter validation
-- **📡 RSS Feed** - Subscribe to new posts at `/rss.xml`
-- **🗺️ Sitemap** - SEO-friendly sitemap for search engines
-- **🖼️ OG Images** - Automatic Open Graph image generation for social sharing
-- **✍️ Reading Time** - Automatic reading time calculation for each post
-- **⚙️ Theme Toggle** - Light/dark theme with visual feedback
-- **🎨 Animated Icons** - Smooth animations powered by motion/react
-- **🔗 Sidebar Navigation** - Intuitive navigation with dynamic state management
+- **Lightning-fast** - Static site generation with 100/100 Lighthouse performance
+- **Dark Mode** - Automatic theme switching with persistent user preferences
+- **Responsive Design** - Beautiful on all devices with Tailwind CSS
+- **Content Collections** - Type-safe markdown/MDX blog posts with frontmatter validation
+- **RSS Feed** - Subscribe to new posts at `/rss.xml`
+- **Sitemap** - SEO-friendly sitemap for search engines
+- **OG Images** - Automatic Open Graph image generation for social sharing
+- **Reading Time** - Automatic reading time calculation for each post
+- **Theme Toggle** - Light/dark theme with visual feedback
+- **Animated Icons** - Smooth animations powered by motion/react
+- **Sidebar Navigation** - Intuitive navigation with dynamic state management
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+
@@ -40,7 +40,7 @@ pnpm dev
 
 The site will be available at `http://localhost:4321`
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── public/                 # Static assets
@@ -70,7 +70,7 @@ The site will be available at `http://localhost:4321`
 └── package.json
 ```
 
-## 📝 Creating Blog Posts
+## Creating Blog Posts
 
 1. Create a new markdown file in `src/content/blog/`:
 
@@ -89,7 +89,7 @@ This supports **markdown** and *formatting*.
 
 2. The post will automatically appear on `/blog` and be included in the RSS feed
 
-## 🧞 Available Commands
+## Available Commands
 
 | Command | Action |
 |---------|--------|
@@ -99,7 +99,7 @@ This supports **markdown** and *formatting*.
 | `pnpm preview` | Preview production build locally |
 | `pnpm astro add` | Add Astro integrations |
 
-## 🚀 Deployment
+## Deployment
 
 ### Cloudflare Pages
 
@@ -118,7 +118,7 @@ pnpm build
 npx wrangler pages deploy ./dist
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: [Astro](https://astro.build)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com)
@@ -127,7 +127,7 @@ npx wrangler pages deploy ./dist
 - **Markdown**: [Astro's native markdown](https://docs.astro.build/en/guides/markdown-content/)
 - **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com/)
 
-## 🎨 Customization
+## Customization
 
 ### Colors & Theme
 Edit `tailwind.config.mjs` and `src/styles/global.css` to customize colors and styling.
@@ -145,20 +145,20 @@ Edit `src/components/app-sidebar.tsx` to customize the sidebar navigation and pr
 ### Avatar
 Replace `public/avatar.png` with your own avatar image.
 
-## 📊 Performance
+## Performance
 
 Built-in optimizations include:
-- ⚡ Static site generation (no server overhead)
-- 🖼️ Automatic image optimization
-- 📦 Responsive image breakpoints (640px, 1024px, 1440px)
-- ✂️ Code splitting and lazy loading
-- 🎯 SEO-friendly with sitemap and RSS feed
+- Static site generation (no server overhead)
+- Automatic image optimization
+- Responsive image breakpoints (640px, 1024px, 1440px)
+- Code splitting and lazy loading
+- SEO-friendly with sitemap and RSS feed
 
-## 📄 License
+## License
 
 This project is open source and available under the MIT License.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Feel free to:
 - Report bugs
@@ -166,12 +166,12 @@ Contributions are welcome! Feel free to:
 - Submit pull requests
 - Improve documentation
 
-## 📧 Contact
+## Contact
 
 - Website: https://yasin.kavakli.at
 - Twitter: [@yasinkavakli](https://twitter.com/yasinkavakli)
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Astro](https://astro.build) - The amazing framework
 - [Shadcn UI](https://ui.shadcn.com) - Beautiful components
@@ -180,4 +180,4 @@ Contributions are welcome! Feel free to:
 
 ---
 
-**Start your own blog** - Fork this repository and make it your own! 🚀
+**Start your own blog** - Fork this repository and make it your own!
