@@ -92,7 +92,7 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
                   </span>
                 )}
                 {index < breadcrumbs.length - 1 && (
-                  <div className="border-l border-dotted border-muted-foreground mx-1.5 h-4" />
+                  <div className="border-l border-dashed mx-1.5 h-4" />
                 )}
               </React.Fragment>
             ))}

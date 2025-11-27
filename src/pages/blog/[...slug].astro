@@ -1,12 +1,16 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { generateSlugFromTitle } from '../../lib/slug';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
+	// Filter out drafts in production, show all in dev
+	const posts = await getCollection('blog', ({ data }) => {
+		return import.meta.env.PROD ? data.draft !== true : true;
+	});
 	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: { ...post, slug: post.id },
+		params: { slug: post.data.slug || generateSlugFromTitle(post.data.title) },
+		props: { ...post, slug: post.data.slug || generateSlugFromTitle(post.data.title) },
 	}));
 }
 type Props = CollectionEntry<'blog'> & { slug: string };

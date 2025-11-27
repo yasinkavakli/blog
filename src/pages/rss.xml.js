@@ -3,7 +3,10 @@ import rss from '@astrojs/rss';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 export async function GET(context) {
-	const posts = await getCollection('blog');
+	// Filter out drafts - RSS should only include published posts
+	const posts = await getCollection('blog', ({ data }) => {
+		return data.draft !== true;
+	});
 	return rss({
 		title: SITE_TITLE,
 		description: SITE_DESCRIPTION,

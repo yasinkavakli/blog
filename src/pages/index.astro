@@ -3,8 +3,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import SocialsIllustration from "../components/SocialsIllustration.astro";
 import EmptyStateIllustration from "../components/EmptyStateIllustration.astro";
 import { getCollection } from "astro:content";
+import { generateSlugFromTitle } from "../lib/slug";
 
-const posts = (await getCollection("blog")).sort(
+// Filter out drafts in production, show all in dev
+const posts = (await getCollection("blog", ({ data }) => {
+	return import.meta.env.PROD ? data.draft !== true : true;
+})).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
@@ -53,12 +57,19 @@ const breadcrumbs = [{ label: "About" }];
 								{recentPosts.map((post) => (
 									<li>
 										<a
-											href={`/blog/${post.id}/`}
+											href={`/blog/${post.data.slug || generateSlugFromTitle(post.data.title)}/`}
 											class="flex items-center gap-2 py-1.5 group"
 										>
-											<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2 flex-1">
-												{post.data.title}
-											</span>
+											<div class="flex-1">
+												<div class="flex items-center gap-2">
+													<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2">{post.data.title}</span>
+												</div>
+												{post.data.draft && (
+													<span class="inline-flex items-center rounded-md border border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-medium mt-1">
+														Draft
+													</span>
+												)}
+											</div>
 											<span class="text-muted-foreground/60 text-xs font-mono tracking-tight">
 												{post.data.pubDate
 													.toLocaleDateString(

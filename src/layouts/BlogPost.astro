@@ -2,35 +2,59 @@
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "./BaseLayout.astro";
+import TagBadge from "../components/TagBadge.astro";
+import { Separator } from "@/components/ui/separator";
+import { XLogoTooltip } from "../components/x-logo-tooltip";
 
-type Props = CollectionEntry<"blog">["data"] & { slug: string; minutesRead?: number };
+type Props = CollectionEntry<"blog">["data"] & {
+	slug: string;
+	minutesRead?: number;
+};
 
-const { title, description, pubDate, updatedDate, heroImage, heroImageLight, heroImageDark, minutesRead, slug } = Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	heroImageLight,
+	heroImageDark,
+	minutesRead,
+	slug,
+	draft,
+	tags: rawTags,
+} = Astro.props;
 
-const breadcrumbs = [
-	{ label: "Writing", href: "/blog" },
-	{ label: title }
-];
+// Sort tags alphabetically
+const tags = rawTags?.sort() || [];
+
+const breadcrumbs = [{ label: "Writing", href: "/blog" }, { label: title }];
 
 const ogImage = `/og/${slug}.png`;
 
 // Get the base slug (filename without extension)
-const baseSlug = slug.split('/').pop() || slug;
+const baseSlug = slug.split("/").pop() || slug;
 
 // Helper to resolve image paths for theme-specific images (from public folder)
-const resolveThemeImagePath = (imagePath: string | undefined): string | undefined => {
+const resolveThemeImagePath = (
+	imagePath: string | undefined,
+): string | undefined => {
 	if (!imagePath) return undefined;
-	if (imagePath.includes('/')) return imagePath; // Already a full path
+	if (imagePath.includes("/")) return imagePath; // Already a full path
 	// Simple filenames resolve to post-specific subfolder in public/assets
 	return `/assets/${baseSlug}/${imagePath}`;
 };
 
 // Resolve theme image paths
-const resolvedHeroImageLight = resolveThemeImagePath(heroImageLight as string | undefined);
-const resolvedHeroImageDark = resolveThemeImagePath(heroImageDark as string | undefined);
+const resolvedHeroImageLight = resolveThemeImagePath(
+	heroImageLight as string | undefined,
+);
+const resolvedHeroImageDark = resolveThemeImagePath(
+	heroImageDark as string | undefined,
+);
 
 // For regular heroImage, handle both Image objects and string filenames
-const isHeroImageString = typeof heroImage === 'string';
+const isHeroImageString = typeof heroImage === "string";
 let resolvedHeroImage: any = heroImage;
 if (isHeroImageString) {
 	resolvedHeroImage = `/assets/${heroImage}`;
@@ -40,22 +64,43 @@ if (isHeroImageString) {
 const hasThemeImages = heroImageLight || heroImageDark;
 ---
 
-<BaseLayout title={title} description={description} ogImage={ogImage} breadcrumbs={breadcrumbs}>
+<BaseLayout
+	title={title}
+	description={description}
+	ogImage={ogImage}
+	breadcrumbs={breadcrumbs}
+>
 	<main class="w-full max-w-3xl px-6 md:px-8">
-		<article>
+		<article class="my-8">
 			<header class="mb-8">
-				<h1 class="text-2xl md:text-3xl font-semibold tracking-tight mb-3">
+				<h1
+					class="text-2xl md:text-3xl font-semibold tracking-tight mb-2 flex items-center gap-3"
+				>
 					{title}
 				</h1>
-				<div class="flex items-center gap-2 text-muted-foreground font-mono text-xs">
+				{
+					draft && (
+						<div class="mb-4">
+							<span class="inline-flex items-center rounded-md border border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-sm font-medium">
+								Draft
+							</span>
+						</div>
+					)
+				}
+				<div
+					class="flex items-center gap-2 text-muted-foreground font-mono text-xs mb-4"
+				>
 					<time datetime={pubDate.toISOString()}>
-						{pubDate.toLocaleDateString("en-us", {
-							year: "numeric",
-							month: "long",
-							day: "numeric",
-						})}
+						{
+							pubDate.toLocaleDateString("en-us", {
+								year: "numeric",
+								month: "long",
+								day: "numeric",
+							})
+						}
 					</time>
-						{updatedDate && (
+					{
+						updatedDate && (
 							<div>
 								<span>·</span>
 								Updated on{" "}
@@ -67,56 +112,83 @@ const hasThemeImages = heroImageLight || heroImageDark;
 									})}
 								</time>
 							</div>
-						)}
-					{minutesRead && (
-						<>
-							<span>·</span>
-							<span>{minutesRead} min read</span>
-						</>
-					)}
+						)
+					}
+					{
+						minutesRead && (
+							<>
+								<span>·</span>
+								<span>{minutesRead} min read</span>
+							</>
+						)
+					}
 				</div>
+				{
+					tags && tags.length > 0 && (
+						<div class="flex flex-wrap gap-2">
+							{tags.map((tag) => (
+								<TagBadge tag={tag} />
+							))}
+						</div>
+					)
+				}
 			</header>
 
-			{hasThemeImages && resolvedHeroImageLight && resolvedHeroImageDark && (
-				<>
-					<img
-						src={resolvedHeroImageLight}
-						alt="Article cover image (light mode)"
-						class="w-full h-auto rounded-xl mb-8 block dark:hidden"
-						loading="eager"
-					/>
-					<img
-						src={resolvedHeroImageDark}
-						alt="Article cover image (dark mode)"
-						class="w-full h-auto rounded-xl mb-8 hidden dark:block"
-						loading="eager"
-					/>
-				</>
-			)}
+			{
+				hasThemeImages &&
+					resolvedHeroImageLight &&
+					resolvedHeroImageDark && (
+						<>
+							<img
+								src={resolvedHeroImageLight}
+								alt="Article cover image (light mode)"
+								class="w-full h-auto rounded-xl mb-8 block dark:hidden"
+								loading="eager"
+							/>
+							<img
+								src={resolvedHeroImageDark}
+								alt="Article cover image (dark mode)"
+								class="w-full h-auto rounded-xl mb-8 hidden dark:block"
+								loading="eager"
+							/>
+						</>
+					)
+			}
 
-			{!hasThemeImages && resolvedHeroImage && (
-				<>
-					{isHeroImageString ? (
-						<img
-							src={resolvedHeroImage}
-							alt="Article cover image"
-							class="w-full h-auto rounded-xl mb-8"
-							loading="eager"
-						/>
-					) : (
-						<Image
-							src={resolvedHeroImage}
-							alt="Article cover image"
-							class="w-full h-auto rounded-xl mb-8"
-							loading="eager"
-						/>
-					)}
-				</>
-			)}
+			{
+				!hasThemeImages && resolvedHeroImage && (
+					<>
+						{isHeroImageString ? (
+							<img
+								src={resolvedHeroImage}
+								alt="Article cover image"
+								class="w-full h-auto rounded-xl mb-8"
+								loading="eager"
+							/>
+						) : (
+							<Image
+								src={resolvedHeroImage}
+								alt="Article cover image"
+								class="w-full h-auto rounded-xl mb-8"
+								loading="eager"
+							/>
+						)}
+					</>
+				)
+			}
 
-			<div class="prose prose-neutral dark:prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-a:underline prose-a:underline-offset-4 prose-pre:bg-[#f9f9f9] dark:prose-pre:bg-[#1a1a1a] prose-code:before:content-none prose-code:after:content-none max-w-none">
+			<div
+				class="prose prose-neutral dark:prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-a:underline prose-a:underline-offset-4 prose-pre:bg-[#f9f9f9] dark:prose-pre:bg-[#1a1a1a] prose-code:before:content-none prose-code:after:content-none max-w-none"
+			>
 				<slot />
 			</div>
 		</article>
+		<Separator />
+		<div class="flex flex-col gap-2 my-8">
+			<p class="flex items-center gap-2">
+				In case of questions, reach out on <XLogoTooltip client:load />
+			</p>
+			<p class="italic">- Yasin</p>
+		</div>
 	</main>
 </BaseLayout>

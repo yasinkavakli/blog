@@ -1,0 +1,128 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog", ({ data }) => {
+		return true; // Include all posts for tag generation (including drafts)
+	});
+
+	// Extract all unique tags and clean them
+	const allTags = Array.from(
+		new Set(posts.flatMap((post) => post.data.tags || []))
+	)
+	.filter(tag => tag && tag.trim()) // Remove empty/null tags
+	.map(tag => tag.trim()) // Clean whitespace
+	.sort();
+
+	// Create paths for each tag
+	return allTags.map((tag) => ({
+		params: { tag },
+		props: { 
+			tag,
+			posts: posts.filter(post => post.data.tags?.includes(tag))
+		},
+	}));
+}
+
+const { tag, posts } = Astro.props;
+
+// Group posts by year
+const postsByYear = posts.reduce(
+	(acc, post) => {
+		const year = post.data.pubDate.getFullYear();
+		if (!acc[year]) {
+			acc[year] = [];
+		}
+		acc[year].push(post);
+		return acc;
+	},
+	{} as Record<number, typeof posts>,
+);
+
+const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
+
+const breadcrumbs = [
+	{ label: "Writing", href: "/blog" },
+	{ label: `Tag: ${tag}` }
+];
+---
+
+<BaseLayout title={`Posts tagged with "${tag}" | Yasin Kavakli`} description={`${posts.length} posts tagged with "${tag}"`} ogImage="/og/writing.png" breadcrumbs={breadcrumbs}>
+	<main class="w-full max-w-xl px-4">
+		<div class="flex flex-col gap-12 py-8">
+			<!-- Header -->
+			<section class="flex flex-col gap-2">
+				<h1 class="text-foreground m-0">Writing</h1>
+				<p class="text-muted-foreground m-0">
+					{posts.length} post{posts.length === 1 ? '' : 's'} tagged with "{tag}"
+				</p>
+			</section>
+
+			<!-- Back to all posts -->
+			<section>
+				<a 
+					href="/blog" 
+					class="text-sm text-muted-foreground hover:text-foreground underline-offset-2 hover:underline transition-colors inline-flex items-center gap-1"
+				>
+					← Back to all posts
+				</a>
+			</section>
+
+			<!-- Posts by Year -->
+			{posts.length > 0 ? (
+				years.map((year) => (
+					<section class="flex flex-col gap-4">
+						<div class="text-muted-foreground/60 text-sm select-none">
+							{year}
+						</div>
+						<ul class="list-none p-0 m-0 flex flex-col gap-1">
+							{postsByYear[Number(year)].map((post) => (
+								<li>
+									<a
+										href={`/blog/${post.data.slug || post.id}/`}
+										class="flex items-center gap-2 py-1.5 group"
+									>
+										<div class="flex-1">
+											<div class="flex items-center gap-2">
+												<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2">{post.data.title}</span>
+											</div>
+											{post.data.draft && (
+												<span class="inline-flex items-center rounded-md border border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-medium mt-1">
+													Draft
+												</span>
+											)}
+										</div>
+										<span class="text-muted-foreground/60 text-xs font-mono tracking-tight">
+											{post.data.pubDate.toLocaleDateString(
+												"en-us",
+												{
+													month: "short",
+													day: "numeric",
+												},
+											)}
+										</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
+			) : (
+				<section class="flex flex-col gap-4 py-8">
+					<div class="text-center text-muted-foreground">
+						No posts found tagged with "{tag}"
+					</div>
+					<div class="text-center">
+						<a 
+							href="/blog" 
+							class="text-sm text-foreground hover:underline underline-offset-2 transition-colors"
+						>
+							View all posts
+						</a>
+					</div>
+				</section>
+			)}
+		</div>
+	</main>
+</BaseLayout>

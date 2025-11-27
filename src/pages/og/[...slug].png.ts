@@ -27,7 +27,10 @@ const [interRegular, interMedium, interSemiBold, interBold, interBlack] = await 
 ]);
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getCollection('blog');
+  // Filter out drafts in production, show all in dev
+  const posts = await getCollection('blog', ({ data }) => {
+    return import.meta.env.PROD ? data.draft !== true : true;
+  });
   return posts.map((post) => ({
     params: { slug: post.id },
     props: {
