@@ -44,10 +44,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const GET: APIRoute = async ({ props }) => {
   const { title, description, breadcrumb } = props;
 
-   // Load avatar image and convert to base64
-   const avatarPath = path.resolve('./public/assets/avatar.png');
-   const avatarBuffer = fs.readFileSync(avatarPath);
-   const avatarBase64 = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
+  // Load avatar image and convert to base64
+  const avatarPath = path.resolve('./public/assets/avatar.png');
+  const avatarBuffer = fs.readFileSync(avatarPath);
+  const avatarBase64 = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
 
   // Colors from your light mode theme (converted from oklch)
   const colors = {
@@ -118,7 +118,7 @@ export const GET: APIRoute = async ({ props }) => {
                           style: {
                             fontSize: '36px',
                             fontWeight: 600,
-                            color: colors.foreground,
+                            color: colors.mutedForeground,
                           },
                           children: 'Yasin Kavakli',
                         },
@@ -157,7 +157,7 @@ export const GET: APIRoute = async ({ props }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       flex: 1,
-                      padding: '48px',
+                      padding: '32px',
                       gap: '24px',
                       justifyContent: 'center',
                     },
@@ -166,9 +166,9 @@ export const GET: APIRoute = async ({ props }) => {
                         type: 'h1',
                         props: {
                           style: {
-                            fontSize: '120px',
+                            fontSize: title.length < 20 ? '180px' : title.length < 40 ? '140px' : title.length < 60 ? '100px' : '80px',
                             fontWeight: 900,
-                            color: colors.foreground,
+                            color: '#171717',
                             lineHeight: 1.0,
                             margin: 0,
                             letterSpacing: '-0.03em',
@@ -176,19 +176,7 @@ export const GET: APIRoute = async ({ props }) => {
                           children: title,
                         },
                       },
-                      {
-                        type: 'p',
-                        props: {
-                          style: {
-                            fontSize: '48px',
-                            fontWeight: 700,
-                            color: colors.mutedForeground,
-                            lineHeight: 1.2,
-                            margin: 0,
-                          },
-                          children: description,
-                        },
-                      },
+
                     ],
                   },
                 },

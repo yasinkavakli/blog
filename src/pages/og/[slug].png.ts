@@ -34,8 +34,8 @@ const colors = {
 };
 
 const projectPages = [
-  { slug: 'home', title: 'Yasin Kavakli', description: 'Senior developer building scalable B2B ecommerce solutions', breadcrumb: 'Home' },
-  { slug: 'writing', title: 'Writing', description: 'Thoughts on software, design, and everything in between.', breadcrumb: 'Blog' },
+  { slug: 'home', title: '', description: 'Senior developer building scalable B2B ecommerce solutions', breadcrumb: 'Home' },
+  { slug: 'writing', title: '', description: 'Thoughts on software, design, and everything in between.', breadcrumb: 'Blog' },
   { slug: 'ama', title: 'Ask Me Anything', description: 'Coming soon', breadcrumb: 'Projects' },
   { slug: 'links', title: 'Links', description: 'Coming soon', breadcrumb: 'Projects' },
   { slug: 'scripts', title: 'Scripts', description: 'Coming soon', breadcrumb: 'Projects' },
@@ -119,7 +119,7 @@ async function generateOG(title: string, description: string, breadcrumb: string
                           style: {
                             fontSize: '36px',
                             fontWeight: 600,
-                            color: colors.foreground,
+                            color: colors.mutedForeground,
                           },
                           children: 'Yasin Kavakli',
                         },
@@ -167,7 +167,7 @@ async function generateOG(title: string, description: string, breadcrumb: string
                         type: 'h1',
                         props: {
                           style: {
-                            fontSize: '120px',
+                            fontSize: title.length < 20 ? '140px' : title.length < 40 ? '100px' : title.length < 60 ? '80px' : '60px',
                             fontWeight: 900,
                             color: colors.foreground,
                             lineHeight: 1.0,
@@ -181,9 +181,9 @@ async function generateOG(title: string, description: string, breadcrumb: string
                         type: 'p',
                         props: {
                           style: {
-                            fontSize: '48px',
-                            fontWeight: 700,
-                            color: colors.mutedForeground,
+                            fontSize: '64px',
+                            fontWeight: 900,
+                            color: '#171717',
                             lineHeight: 1.2,
                             margin: 0,
                           },
