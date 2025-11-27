@@ -15,9 +15,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { title, description, ogImage } = Astro.props;
 
 // Use dynamic OG image if available, otherwise fall back to default
+// Cache-busting version param to force social media platforms to re-fetch
+const ogCacheVersion = 'v=2';
 const ogImageUrl = ogImage 
-	? new URL(ogImage, Astro.site) 
-	: new URL('/og/default.png', Astro.site);
+	? new URL(`${ogImage}?${ogCacheVersion}`, Astro.site) 
+	: new URL(`/og/default.png?${ogCacheVersion}`, Astro.site);
 ---
 
 <!-- Global Metadata -->
