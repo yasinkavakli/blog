@@ -111,7 +111,7 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
             <Button
               variant="ghost"
               size="icon"
-              className="size-7"
+              className="size-7 min-h-[44px] min-w-[44px]"
               onClick={onShare}
               onMouseEnter={() => !isCopied && setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
