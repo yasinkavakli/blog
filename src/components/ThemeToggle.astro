@@ -93,7 +93,11 @@
     document.documentElement.classList.toggle("dark", isDark);
 
     // Save preference
-    localStorage.setItem("theme", next);
+    try {
+      localStorage.setItem("theme", next);
+    } catch (err) {
+      console.warn("Failed to save theme preference:", err);
+    }
   }
 
   // Listen for system theme changes

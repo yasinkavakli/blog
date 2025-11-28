@@ -142,12 +142,17 @@ export default function LayoutWrapper({ children, breadcrumbs, avatarSrc, hasBlo
   const contentRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
-    // Read cookie on mount to get the saved state
-    const cookies = document.cookie.split('; ');
-    const sidebarCookie = cookies.find(row => row.startsWith('sidebar_state='));
-    if (sidebarCookie) {
-      const value = sidebarCookie.split('=')[1];
-      setSidebarOpen(value === 'true');
+    try {
+      // Read cookie on mount to get the saved state
+      const cookies = document.cookie.split('; ');
+      const sidebarCookie = cookies.find(row => row.startsWith('sidebar_state='));
+      if (sidebarCookie) {
+        const value = sidebarCookie.split('=')[1];
+        setSidebarOpen(value === 'true');
+      }
+    } catch (err) {
+      // Cookie might be inaccessible, use default state
+      console.warn('Failed to read sidebar state:', err);
     }
     setMounted(true);
   }, []);
