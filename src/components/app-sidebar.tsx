@@ -210,6 +210,8 @@ export function AppSidebar({ avatarSrc, hasBlogPosts = true, ...props }: React.C
                 <img
                   src={avatarSrc || "/avatar.png"}
                   alt="Yasin Kavakli"
+                  width={32}
+                  height={32}
                   className="size-8 rounded-full object-cover"
                 />
                 <span className="font-semibold">Yasin Kavakli</span>

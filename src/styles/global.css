@@ -1,15 +1,17 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Font display optimization */
+/* Font display optimization - use optional to prevent layout shift */
 @font-face {
 	font-family: 'Inter';
-	font-display: swap;
+	font-display: optional;
+	size-adjust: 100%;
 }
 
 @font-face {
 	font-family: 'JetBrains Mono';
-	font-display: swap;
+	font-display: optional;
+	size-adjust: 100%;
 }
 
 @custom-variant dark (&:is(.dark *));

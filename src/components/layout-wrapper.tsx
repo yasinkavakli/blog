@@ -62,6 +62,8 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
                     <img
                       src={avatarSrc}
                       alt="Avatar"
+                      width={24}
+                      height={24}
                       className="size-6 rounded-full object-cover"
                     />
                     <span className="sr-only">Go to homepage</span>
@@ -198,9 +200,31 @@ export default function LayoutWrapper({ children, breadcrumbs, avatarSrc, hasBlo
     }
   }
 
-  // Don't render until we've read the cookie to prevent hydration mismatch
+  // Render a skeleton layout during SSR/hydration to prevent CLS
+  // This matches the basic structure so there's no layout shift when React hydrates
   if (!mounted) {
-    return null;
+    return (
+      <div className="flex h-svh w-full">
+        {/* Sidebar skeleton - matches inset sidebar dimensions */}
+        <div className="hidden md:flex w-[--sidebar-width] shrink-0 flex-col gap-4 p-2" style={{ '--sidebar-width': '16rem' } as React.CSSProperties}>
+          <div className="h-12 rounded-lg bg-sidebar-accent/30" />
+          <div className="flex-1 space-y-2">
+            <div className="h-8 w-full rounded-md bg-sidebar-accent/20" />
+            <div className="h-8 w-full rounded-md bg-sidebar-accent/20" />
+            <div className="h-8 w-full rounded-md bg-sidebar-accent/20" />
+          </div>
+        </div>
+        {/* Main content area skeleton */}
+        <div className="flex-1 flex flex-col rounded-xl bg-background dark:bg-card">
+          <div className="flex h-14 shrink-0 items-center border-b border-dashed px-4">
+            <div className="h-6 w-6 rounded bg-muted animate-pulse" />
+          </div>
+          <div className="flex-1 flex flex-col items-center py-4 overflow-y-auto">
+            {children}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
