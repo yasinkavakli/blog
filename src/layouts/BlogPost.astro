@@ -163,12 +163,14 @@ const structuredData = {
 								alt="Article cover image (light mode)"
 								class="w-full h-auto rounded-xl mb-8 block dark:hidden"
 								loading="eager"
+								fetchpriority="high"
 							/>
 							<img
 								src={resolvedHeroImageDark}
 								alt="Article cover image (dark mode)"
 								class="w-full h-auto rounded-xl mb-8 hidden dark:block"
 								loading="eager"
+								fetchpriority="high"
 							/>
 						</>
 					)
@@ -183,6 +185,7 @@ const structuredData = {
 								alt="Article cover image"
 								class="w-full h-auto rounded-xl mb-8"
 								loading="eager"
+								fetchpriority="high"
 							/>
 						) : (
 							<Image
@@ -190,6 +193,7 @@ const structuredData = {
 								alt="Article cover image"
 								class="w-full h-auto rounded-xl mb-8"
 								loading="eager"
+								fetchpriority="high"
 							/>
 						)}
 					</>
