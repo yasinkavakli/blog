@@ -155,23 +155,27 @@ export default function LayoutWrapper({ children, breadcrumbs, avatarSrc, hasBlo
   React.useEffect(() => {
     if (!mounted || !contentRef.current) return;
 
-    // Save scroll position
-    const handleScroll = () => {
-      if (contentRef.current) {
-        sessionStorage.setItem('contentScroll', contentRef.current.scrollTop.toString());
+    try {
+      // Save scroll position
+      const handleScroll = () => {
+        if (contentRef.current) {
+          sessionStorage.setItem('contentScroll', contentRef.current.scrollTop.toString());
+        }
+      };
+
+      const container = contentRef.current;
+      container.addEventListener('scroll', handleScroll);
+      
+      // Restore scroll position if it exists
+      const savedScroll = sessionStorage.getItem('contentScroll');
+      if (savedScroll) {
+        container.scrollTop = parseInt(savedScroll, 10);
       }
-    };
 
-    const container = contentRef.current;
-    container.addEventListener('scroll', handleScroll);
-    
-    // Restore scroll position if it exists
-    const savedScroll = sessionStorage.getItem('contentScroll');
-    if (savedScroll) {
-      container.scrollTop = parseInt(savedScroll, 10);
+      return () => container.removeEventListener('scroll', handleScroll);
+    } catch (err) {
+      console.warn('Failed to manage scroll position:', err);
     }
-
-    return () => container.removeEventListener('scroll', handleScroll);
   }, [mounted]);
 
   const handleShare = async () => {
