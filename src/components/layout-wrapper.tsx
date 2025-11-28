@@ -82,13 +82,13 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
             {breadcrumbs.map((crumb, index) => (
               <React.Fragment key={index}>
                 {crumb.href ? (
-                  <a
-                    href={crumb.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {crumb.label}
-                  </a>
-                ) : (
+                   <a
+                     href={crumb.href}
+                     className="text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+                   >
+                     {crumb.label}
+                   </a>
+                 ) : (
                   <span className={cn("text-foreground font-medium truncate max-w-[200px] md:max-w-none", shouldHideTitle && "hidden md:inline")}>
                     {crumb.label}
                   </span>
