@@ -183,14 +183,14 @@ const hasThemeImages = heroImageLight || heroImageDark;
 				<slot />
 			</div>
 		</article>
-		<div class="mx-auto w-1/2">
+		<div class="mx-auto w-1/2 text-center">
 			<Separator dashed />
-		</div>
-		<div class="flex flex-col gap-2 my-8">
-			<p class="flex items-center gap-2">
-				In case of questions, reach out on <XLogoTooltip client:load />
-			</p>
-			<p class="italic">- Yasin</p>
+			<div class="flex flex-col gap-2 my-8">
+				<p class="flex items-center justify-center gap-2">
+					In case of questions, reach out on <XLogoTooltip client:load />
+				</p>
+				<p class="italic">- Yasin</p>
+			</div>
 		</div>
 	</main>
 </BaseLayout>
