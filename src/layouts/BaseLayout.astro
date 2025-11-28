@@ -34,6 +34,25 @@ const blogPostsExist = await hasBlogPosts();
 <html lang="en" class="antialiased bg-sidebar dark:bg-sidebar">
 	<head>
 		<BaseHead title={title} description={description} ogImage={ogImage} />
+		<!-- Critical CSS for theme to prevent flash -->
+		<style>
+			:root {
+				--radius: 0.625rem;
+				--background: oklch(1 0 0);
+				--foreground: oklch(0.141 0.005 285.823);
+				--sidebar: oklch(0.985 0 0);
+				--sidebar-foreground: oklch(0.141 0.005 285.823);
+			}
+			.dark {
+				--background: oklch(0.141 0.005 285.823);
+				--foreground: oklch(0.985 0 0);
+				--sidebar: oklch(0.141 0.005 285.823);
+				--sidebar-foreground: oklch(0.985 0 0);
+			}
+			html {
+				color-scheme: light dark;
+			}
+		</style>
 		<script is:inline>
 			function updateTheme() {
 				const theme = localStorage.getItem("theme") || "system";

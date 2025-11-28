@@ -35,6 +35,12 @@ const ogImageUrl = ogImage
 />
 <meta name="generator" content={Astro.generator} />
 
+<!-- Font preload for better LCP -->
+<link rel="preconnect" href="https://rsms.me" />
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+<link rel="dns-prefetch" href="https://rsms.me" />
+<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 

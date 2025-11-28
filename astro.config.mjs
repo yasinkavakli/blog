@@ -52,6 +52,18 @@ export default defineConfig({
   vite: {
     // Tailwind CSS plugin for utility-first styling
     plugins: [tailwindcss()],
+    build: {
+      // Optimize for production performance
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Separate vendor chunks for better caching
+            vendor: ['@astrojs/react'],
+          },
+        },
+      },
+    },
     resolve: {
       // Path aliases for cleaner imports throughout the codebase
       alias: {

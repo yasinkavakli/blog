@@ -1,7 +1,18 @@
-@import url('https://rsms.me/inter/inter.css');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://rsms.me/inter/inter.css') layer(base);
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap') layer(base);
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* Font display optimization */
+@font-face {
+	font-family: 'Inter';
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'JetBrains Mono';
+	font-display: swap;
+}
 
 @custom-variant dark (&:is(.dark *));
 
