@@ -75,3 +75,17 @@ const ogImageUrl = ogImage
 	content="oklch(0.099 0.005 80)"
 	media="(prefers-color-scheme: dark)"
 />
+
+<!-- Structured Data for Person/Blog -->
+<script type="application/ld+json" set:html={JSON.stringify({
+	"@context": "https://schema.org",
+	"@type": "Person",
+	"name": "Yasin Kavakli",
+	"url": Astro.site.toString(),
+	"jobTitle": "Senior Developer",
+	"sameAs": [
+		"https://x.com/yasinkavakliat",
+		"https://github.com/yasinkavakli"
+	],
+	"description": "Senior developer building scalable B2B ecommerce solutions"
+})} />
