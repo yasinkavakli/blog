@@ -41,6 +41,14 @@ const ogImageUrl = ogImage
 <link rel="dns-prefetch" href="https://rsms.me" />
 <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
 
+<!-- Load fonts asynchronously to not block FCP -->
+<link rel="preload" as="style" href="https://rsms.me/inter/inter.css" onload="this.onload=null;this.rel='stylesheet'" />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript>
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" />
+</noscript>
+
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 

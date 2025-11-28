@@ -34,7 +34,7 @@ const blogPostsExist = await hasBlogPosts();
 <html lang="en" class="antialiased bg-sidebar dark:bg-sidebar">
 	<head>
 		<BaseHead title={title} description={description} ogImage={ogImage} />
-		<!-- Critical CSS for theme to prevent flash -->
+		<!-- Critical CSS for theme to prevent flash and FCP -->
 		<style>
 			:root {
 				--radius: 0.625rem;
@@ -51,6 +51,18 @@ const blogPostsExist = await hasBlogPosts();
 			}
 			html {
 				color-scheme: light dark;
+				font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			}
+			body {
+				background-color: hsl(var(--sidebar));
+				color: hsl(var(--sidebar-foreground));
+				margin: 0;
+				padding: 0;
+				min-height: 100vh;
+			}
+			main {
+				background-color: hsl(var(--background));
+				color: hsl(var(--foreground));
 			}
 		</style>
 		<script is:inline>
