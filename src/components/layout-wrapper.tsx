@@ -59,13 +59,14 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
                     )}
                     onClick={() => window.location.href = "/"}
                   >
-                    <img
-                      src={avatarSrc}
-                      alt="Avatar"
-                      width={24}
-                      height={24}
-                      className="size-6 rounded-full object-cover"
-                    />
+                     <img
+                       src={avatarSrc}
+                       alt="Avatar"
+                       width={24}
+                       height={24}
+                       className="size-6 rounded-full object-cover"
+                       fetchPriority="high"
+                     />
                     <span className="sr-only">Go to homepage</span>
                   </Button>
                 </TooltipTrigger>

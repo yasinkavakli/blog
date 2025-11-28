@@ -1,17 +1,13 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Font display optimization - use optional to prevent layout shift */
-@font-face {
-	font-family: 'Inter';
-	font-display: optional;
-	size-adjust: 100%;
-}
+/* Import local Inter font for better performance */
+@import '@fontsource-variable/inter/wght.css';
 
+/* Font display optimization - use swap for better UX */
 @font-face {
 	font-family: 'JetBrains Mono';
-	font-display: optional;
-	size-adjust: 100%;
+	font-display: swap;
 }
 
 @custom-variant dark (&:is(.dark *));

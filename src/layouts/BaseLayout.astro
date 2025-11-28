@@ -34,6 +34,8 @@ const blogPostsExist = await hasBlogPosts();
 <html lang="en" class="antialiased bg-sidebar">
 	<head>
 		<BaseHead title={title} description={description} ogImage={ogImage} />
+		<!-- Preload avatar for better LCP -->
+		<link rel="preload" href={optimizedAvatar.src} as="image" />
 		<!-- Critical CSS for theme to prevent flash and FCP -->
 		<style>
 			:root {
