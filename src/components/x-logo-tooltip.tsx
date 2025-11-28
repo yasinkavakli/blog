@@ -9,7 +9,7 @@ export const XLogoTooltip: React.FC = () => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <a href="https://x.com/yasinkavakliat" className="font-semibold size-4 inline-flex">
+        <a href="https://x.com/yasinkavakliat" className="font-semibold size-4 inline-flex" aria-label="Follow Yasin on X (formerly Twitter)">
           <svg
             x="11"
             y="11"
