@@ -37,8 +37,10 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
   isHovered: boolean
   setIsHovered: (hovered: boolean) => void
 }) {
-  const { state } = useSidebar()
+  const { state, isMobile, openMobile } = useSidebar()
   const isCollapsed = state === "collapsed"
+  const shouldShowAvatar = isMobile ? !openMobile : isCollapsed
+  const shouldHideTitle = isMobile
 
   return (
     <div className="flex items-center justify-between gap-2 w-full">
@@ -53,7 +55,7 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
                     size="icon"
                     className={cn(
                       "size-6 p-0 overflow-hidden transition-all duration-200 ease-linear",
-                      isCollapsed ? "opacity-100 w-6" : "opacity-0 w-0"
+                      shouldShowAvatar ? "opacity-100 w-6" : "opacity-0 w-0"
                     )}
                     onClick={() => window.location.href = "/"}
                   >
@@ -70,7 +72,7 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            {isCollapsed && <div className="border-r border-dashed mr-2 h-4" />}
+            {shouldShowAvatar && <div className="border-r border-dashed mr-2 h-4" />}
           </>
         )}
         <SidebarTrigger className="-ml-1" />
@@ -87,12 +89,12 @@ function HeaderContent({ breadcrumbs, avatarSrc, onShare, isCopied, tooltipOpen,
                     {crumb.label}
                   </a>
                 ) : (
-                  <span className="text-foreground font-medium truncate max-w-[200px] md:max-w-none">
+                  <span className={cn("text-foreground font-medium truncate max-w-[200px] md:max-w-none", shouldHideTitle && "hidden md:inline")}>
                     {crumb.label}
                   </span>
                 )}
                 {index < breadcrumbs.length - 1 && (
-                  <div className="border-l border-dashed mx-1.5 h-4" />
+                  <div className={cn("border-l border-dashed mx-1.5 h-4", index === breadcrumbs.length - 2 && shouldHideTitle && "hidden md:block")} />
                 )}
               </React.Fragment>
             ))}
@@ -193,7 +195,7 @@ export default function LayoutWrapper({ children, breadcrumbs, avatarSrc, hasBlo
   }
 
   return (
-    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen} className="h-svh overflow-hidden">
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen} variant="inset" className="h-svh overflow-hidden">
       <AppSidebar avatarSrc={avatarSrc} hasBlogPosts={hasBlogPosts} />
       <SidebarInset className="overflow-hidden">
         <div className="flex flex-col h-full w-full rounded-xl bg-background dark:bg-card">

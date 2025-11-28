@@ -38,6 +38,7 @@ type SidebarContextProps = {
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
   toggleSidebar: () => void
+  variant: "sidebar" | "floating" | "inset"
 }
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
@@ -58,11 +59,13 @@ function SidebarProvider({
   className,
   style,
   children,
+  variant = "sidebar",
   ...props
 }: React.ComponentProps<"div"> & {
   defaultOpen?: boolean
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  variant?: "sidebar" | "floating" | "inset"
 }) {
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
@@ -121,8 +124,9 @@ function SidebarProvider({
       openMobile,
       setOpenMobile,
       toggleSidebar,
+      variant,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar, variant]
   )
 
   return (
@@ -138,7 +142,9 @@ function SidebarProvider({
             } as React.CSSProperties
           }
           className={cn(
-            "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
+            "group/sidebar-wrapper flex min-h-svh w-full",
+            variant === "inset" && "bg-sidebar",
+            "has-data-[variant=inset]:bg-sidebar",
             className
           )}
           {...props}
@@ -186,6 +192,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
+          data-variant={variant}
           className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
           style={
             {
@@ -317,12 +324,16 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
 }
 
 function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
+  const { isMobile, variant } = useSidebar()
+  const isInset = variant === "inset"
+
   return (
     <main
       data-slot="sidebar-inset"
       className={cn(
         "bg-background dark:bg-card relative flex w-full flex-1 flex-col",
-        "md:peer-data-[variant=inset]:m-6 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-6",
+        isInset && isMobile && "m-4 rounded-xl shadow-sm",
+        "peer-data-[variant=inset]:m-4 peer-data-[variant=inset]:ml-0 peer-data-[variant=inset]:rounded-xl peer-data-[variant=inset]:shadow-sm peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-4 md:peer-data-[variant=inset]:m-6 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-6",
         className
       )}
       {...props}
