@@ -70,7 +70,7 @@ const breadcrumbs = [{ label: "Writing" }];
 			{
 				years.map((year) => (
 					<section class="flex flex-col gap-4">
-						<div class="text-muted-foreground/60 text-sm select-none">
+						<div class="text-muted-foreground text-sm select-none">
 							{year}
 						</div>
 						<ul class="list-none p-0 m-0 flex flex-col gap-1">
@@ -90,7 +90,7 @@ const breadcrumbs = [{ label: "Writing" }];
 												</span>
 											)}
 										</div>
-										<span class="text-muted-foreground/60 text-xs font-mono tracking-tight">
+										<span class="text-muted-foreground text-xs font-mono tracking-tight">
 											{post.data.pubDate.toLocaleDateString(
 												"en-us",
 												{

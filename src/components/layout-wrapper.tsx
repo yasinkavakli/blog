@@ -194,7 +194,7 @@ export default function LayoutWrapper({ children, breadcrumbs, avatarSrc, hasBlo
         setTooltipOpen(false)
       }, 2000)
     } catch (err) {
-      console.error('Failed to copy:', err)
+      console.warn('Failed to copy URL:', err)
     }
   }
 
