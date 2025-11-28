@@ -137,6 +137,7 @@ export default function LayoutWrapper({ children, breadcrumbs, avatarSrc, hasBlo
   // Controlled sidebar state - read from cookie on mount
   const [sidebarOpen, setSidebarOpen] = React.useState(true)
   const [mounted, setMounted] = React.useState(false)
+  const contentRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     // Read cookie on mount to get the saved state
@@ -148,6 +149,28 @@ export default function LayoutWrapper({ children, breadcrumbs, avatarSrc, hasBlo
     }
     setMounted(true);
   }, []);
+
+  React.useEffect(() => {
+    if (!mounted || !contentRef.current) return;
+
+    // Save scroll position
+    const handleScroll = () => {
+      if (contentRef.current) {
+        sessionStorage.setItem('contentScroll', contentRef.current.scrollTop.toString());
+      }
+    };
+
+    const container = contentRef.current;
+    container.addEventListener('scroll', handleScroll);
+    
+    // Restore scroll position if it exists
+    const savedScroll = sessionStorage.getItem('contentScroll');
+    if (savedScroll) {
+      container.scrollTop = parseInt(savedScroll, 10);
+    }
+
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [mounted]);
 
   const handleShare = async () => {
     const url = window.location.href
@@ -186,7 +209,7 @@ export default function LayoutWrapper({ children, breadcrumbs, avatarSrc, hasBlo
               setIsHovered={setIsHovered}
             />
           </header>
-          <div className="flex-1 flex flex-col items-center py-4 overflow-y-auto">
+          <div ref={contentRef} className="flex-1 flex flex-col items-center py-4 overflow-y-auto">
             {children}
           </div>
         </div>
