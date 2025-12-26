@@ -34,7 +34,8 @@
     "satori": "^0.18.3",
     "satori-html": "^0.3.2",
     "sharp": "^0.34.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "lucide-react": "0.562.0"
   },
   "devDependencies": {
     "@radix-ui/react-collapsible": "^1.1.12",
@@ -42,10 +43,13 @@
     "@tailwindcss/vite": "^4.1.17",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.554.0",
+    "lucide-react": "0.562.0",
     "shadcn-ui": "^0.9.5",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17",
     "wrangler": "^4.51.0"
+  },
+  "peerDependencies": {
+    "lucide-react": "0.562.0"
   }
 }
