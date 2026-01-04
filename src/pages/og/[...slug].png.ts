@@ -59,10 +59,10 @@ function calculateTitleFontSize(title: string): number {
 
 // Calculate line height based on font size
 function calculateLineHeight(fontSize: number): number {
-  // Smaller fonts need relatively more line height
-  if (fontSize >= 64) return 1.1;
-  if (fontSize >= 48) return 1.15;
-  return 1.2;
+  if (fontSize >= 80) return 1.15;
+  if (fontSize >= 64) return 1.2;
+  if (fontSize >= 48) return 1.25;
+  return 1.3;
 }
 
 export const GET: APIRoute = async ({ props }) => {
@@ -199,7 +199,7 @@ export const GET: APIRoute = async ({ props }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       flex: 1,
-                      padding: '40px 48px',
+                      padding: '56px 48px',
                       justifyContent: 'center',
                     },
                     children: [
