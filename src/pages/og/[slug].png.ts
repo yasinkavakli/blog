@@ -220,7 +220,7 @@ async function generateOG(title: string, description: string, breadcrumb: string
                           style: {
                             fontFamily: 'General Sans',
                             fontSize: hasTitle ? '38px' : '52px',
-                            fontWeight: hasTitle ? 400 : 600,
+                            fontWeight: hasTitle ? 500 : 600,
                             color: hasTitle ? colors.mutedForeground : colors.foreground,
                             lineHeight: 1.4,
                             margin: 0,
