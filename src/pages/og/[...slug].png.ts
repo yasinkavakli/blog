@@ -200,8 +200,8 @@ export const GET: APIRoute = async ({ props }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       flex: 1,
-                      margin: '56px 48px',
-                      justifyContent: 'center',
+                      margin: '24px 48px 56px 48px',
+                      justifyContent: 'flex-start',
                     },
                     children: [
                       // Title using Khand font
