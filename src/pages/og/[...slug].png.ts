@@ -59,10 +59,10 @@ function calculateTitleFontSize(title: string): number {
 
 // Calculate line height based on font size
 function calculateLineHeight(fontSize: number): number {
-  if (fontSize >= 80) return 1.2;
-  if (fontSize >= 64) return 1.25;
-  if (fontSize >= 48) return 1.3;
-  return 1.35;
+  if (fontSize >= 80) return 1.3;
+  if (fontSize >= 64) return 1.4;
+  if (fontSize >= 48) return 1.45;
+  return 1.5;
 }
 
 export const GET: APIRoute = async ({ props }) => {
@@ -200,8 +200,9 @@ export const GET: APIRoute = async ({ props }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       flex: 1,
-                      margin: '24px 48px 56px 48px',
+                      margin: '8px 48px 64px 48px',
                       justifyContent: 'flex-start',
+                      overflow: 'hidden',
                     },
                     children: [
                       // Title using Khand font
@@ -216,10 +217,10 @@ export const GET: APIRoute = async ({ props }) => {
                             lineHeight: titleLineHeight,
                             margin: 0,
                             letterSpacing: '-0.01em',
-                            maxWidth: '100%',
+                            width: '100%',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            // Restrict to 3 lines max to leave room for description
+                            // Restrict to 3 lines max
                             display: '-webkit-box',
                             WebkitLineClamp: 3,
                             WebkitBoxOrient: 'vertical',
@@ -227,8 +228,8 @@ export const GET: APIRoute = async ({ props }) => {
                           children: title,
                         },
                       },
-                      // Optional: Description if short enough
-                      ...(description && description.length <= 120 ? [{
+                      // Optional: Description only for very short titles
+                      ...(description && description.length <= 120 && titleLength <= 40 ? [{
                         type: 'p',
                         props: {
                           style: {
@@ -238,7 +239,7 @@ export const GET: APIRoute = async ({ props }) => {
                             color: colors.mutedForeground,
                             lineHeight: 1.5,
                             margin: 0,
-                            marginTop: '32px',
+                            marginTop: '24px',
                             maxWidth: '90%',
                           },
                           children: description,
