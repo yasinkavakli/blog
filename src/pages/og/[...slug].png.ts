@@ -232,8 +232,8 @@ export const GET: APIRoute = async ({ props }) => {
                         props: {
                           style: {
                             fontFamily: 'General Sans',
-                            fontSize: '32px',
-                            fontWeight: 500,
+                            fontSize: '40px',
+                            fontWeight: 600,
                             color: colors.mutedForeground,
                             lineHeight: 1.5,
                             margin: 0,
