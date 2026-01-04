@@ -19,8 +19,6 @@ export default defineConfig({
     mdx(),
     // Automatic sitemap generation for SEO
     sitemap(),
-    // React integration for interactive components (used in sidebar nav)
-    react(),
   ],
 
   // Markdown configuration for blog posts
