@@ -1,0 +1,74 @@
+---
+import BlogLayout from "../layouts/BlogLayout.astro";
+import { Image } from "astro:assets";
+
+const title = "About Me";
+const description =
+    "Learn more about my background, experience, and philosophy.";
+---
+
+<BlogLayout title={title} description={description}>
+    <div class="max-w-3xl mx-auto px-4 py-12 md:py-20">
+        <div class="space-y-12">
+            {/* Header Section */}
+            <div class="text-center space-y-4">
+                <h1
+                    class="text-4xl md:text-5xl font-bold tracking-tight text-foreground"
+                >
+                    About Me
+                </h1>
+                <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Designer, developer, and storyteller based in San Francisco.
+                </p>
+            </div>
+
+            {/* Hero Image */}
+            <div
+                class="relative w-full aspect-[16/9] overflow-hidden rounded-2xl md:rounded-3xl shadow-sm border border-border/50 bg-muted"
+            >
+                <Image
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2400&auto=format&fit=crop"
+                    alt="Portrait"
+                    width={1200}
+                    height={675}
+                    class="w-full h-full object-cover"
+                />
+            </div>
+
+            {/* Content */}
+            <div class="prose prose-lg dark:prose-invert mx-auto">
+                <p>
+                    Hello! I'm Yasin. I've been building things on the web for
+                    over a decade. My journey started with simple HTML/CSS
+                    tweaks and evolved into full-stack application development.
+                </p>
+                <p>
+                    I currently work at the intersection of design and
+                    engineering, ensuring that the products we build are not
+                    only functional but also delightful to use. I believe that
+                    good design is invisible—it just works.
+                </p>
+
+                <h3>Experience</h3>
+                <ul>
+                    <li>
+                        <strong>Senior Engineer</strong> at Tech Corp (2020 - Present)
+                    </li>
+                    <li>
+                        <strong>Product Designer</strong> at Design Studio (2018 -
+                        2020)
+                    </li>
+                    <li><strong>Freelance Developer</strong> (2015 - 2018)</li>
+                </ul>
+
+                <h3>Philosophy</h3>
+                <p>
+                    Simplicity is key. In a world of infinite possibilities,
+                    choosing what <em>not</em> to build is just as important as what
+                    to build. I strive to create software that respects the user's
+                    time and attention.
+                </p>
+            </div>
+        </div>
+    </div>
+</BlogLayout>

@@ -1,0 +1,78 @@
+---
+import BlogLayout from "../layouts/BlogLayout.astro";
+
+const title = "Links";
+const description = "Everything you need to find me on the internet.";
+
+const categories = [
+    {
+        title: "Social",
+        items: [
+            { name: "Twitter / X", url: "https://twitter.com/yasinkavakliat", description: "My main presence for thoughts and updates" },
+            { name: "GitHub", url: "https://github.com/yasinkavakli", description: "Open source projects and code" },
+            { name: "LinkedIn", url: "https://linkedin.com/in/yasinkavakli", description: "Professional profile and work history" },
+            { name: "Instagram", url: "https://instagram.com/yasinkavakli", description: "Photos and visual content" },
+        ],
+    },
+    {
+        title: "Writing",
+        items: [
+            { name: "Blog", url: "/blog", description: "Thoughts on software, design, and everything in between" },
+            { name: "Newsletter", url: "#", description: "Occasional updates delivered to your inbox" },
+            { name: "RSS", url: "/rss.xml", description: "Subscribe via RSS feed" },
+        ],
+    },
+    {
+        title: "Other",
+        items: [
+            { name: "Projects", url: "/projects", description: "A showcase of my recent work" },
+            { name: "About", url: "/about", description: "Learn more about my background" },
+            { name: "Uses", url: "/uses", description: "The hardware and software I use" },
+        ],
+    },
+];
+---
+
+<BlogLayout title={title} description={description}>
+    <div class="max-w-3xl mx-auto px-4 py-12 md:py-20">
+        <div class="space-y-16">
+            <div class="text-center space-y-4">
+                <h1
+                    class="text-4xl md:text-5xl font-bold tracking-tight text-foreground"
+                >
+                    Links
+                </h1>
+                <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Everything you need to find me on the internet.
+                </p>
+            </div>
+
+            {
+                categories.map((category) => (
+                    <section class="space-y-6">
+                        <h2 class="text-2xl font-bold tracking-tight text-foreground border-b border-border pb-2">
+                            {category.title}
+                        </h2>
+                        <div class="grid gap-6">
+                            {category.items.map((item) => (
+                                <a
+                                    href={item.url}
+                                    target={item.url.startsWith("http") ? "_blank" : "_self"}
+                                    rel="noopener noreferrer"
+                                    class="group flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4"
+                                >
+                                    <span class="font-semibold text-foreground group-hover:text-primary transition-colors">
+                                        {item.name}
+                                    </span>
+                                    <span class="text-muted-foreground text-sm sm:text-base">
+                                        {item.description}
+                                    </span>
+                                </a>
+                            ))}
+                        </div>
+                    </section>
+                ))
+            }
+        </div>
+    </div>
+</BlogLayout>
