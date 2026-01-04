@@ -59,10 +59,10 @@ function calculateTitleFontSize(title: string): number {
 
 // Calculate line height based on font size
 function calculateLineHeight(fontSize: number): number {
-  if (fontSize >= 80) return 1.15;
-  if (fontSize >= 64) return 1.2;
-  if (fontSize >= 48) return 1.25;
-  return 1.3;
+  if (fontSize >= 80) return 1.2;
+  if (fontSize >= 64) return 1.25;
+  if (fontSize >= 48) return 1.3;
+  return 1.35;
 }
 
 export const GET: APIRoute = async ({ props }) => {
@@ -84,6 +84,7 @@ export const GET: APIRoute = async ({ props }) => {
 
   const titleFontSize = calculateTitleFontSize(title);
   const titleLineHeight = calculateLineHeight(titleFontSize);
+  const titleLength = title.length;
 
   const svg = await satori(
     {
@@ -199,7 +200,7 @@ export const GET: APIRoute = async ({ props }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       flex: 1,
-                      padding: '56px 48px',
+                      margin: '56px 48px',
                       justifyContent: 'center',
                     },
                     children: [
@@ -218,9 +219,9 @@ export const GET: APIRoute = async ({ props }) => {
                             maxWidth: '100%',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            // Restrict to 4 lines max
+                            // Restrict to 3 lines max to leave room for description
                             display: '-webkit-box',
-                            WebkitLineClamp: 4,
+                            WebkitLineClamp: 3,
                             WebkitBoxOrient: 'vertical',
                           },
                           children: title,
