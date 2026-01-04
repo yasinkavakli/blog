@@ -1,0 +1,114 @@
+---
+import BlogLayout from "../layouts/BlogLayout.astro";
+
+const title = "Projects";
+const description =
+    "A showcase of my recent work and open source contributions.";
+
+const projects = [
+    {
+        title: "My Blog",
+        description:
+            "A minimalist, high-performance Astro theme designed for storytellers.",
+        link: "#",
+        tags: ["Astro", "Tailwind", "Design System"],
+        year: "2024",
+    },
+    {
+        title: "TaskFlow",
+        description:
+            "A collaborative project management tool built for remote teams.",
+        link: "#",
+        tags: ["React", "TypeScript", "Node.js"],
+        year: "2023",
+    },
+    {
+        title: "Pixel Perfect",
+        description: "An AI-powered image upscaling service for photographers.",
+        link: "#",
+        tags: ["Python", "Machine Learning", "FastAPI"],
+        year: "2023",
+    },
+    {
+        title: "DevDash",
+        description:
+            "A terminal-based dashboard for developer productivity metrics.",
+        link: "#",
+        tags: ["Rust", "TUI", "Analytics"],
+        year: "2022",
+    },
+    {
+        title: "Notes App",
+        description:
+            "A secure, privacy-first note taking application with E2E encryption.",
+        link: "#",
+        tags: ["Next.js", "Prisma", "PostgreSQL"],
+        year: "2022",
+    },
+];
+---
+
+<BlogLayout title={title} description={description}>
+    <div class="max-w-[1200px] mx-auto px-4 py-12 md:py-20">
+        <div class="space-y-16">
+            <div class="text-center space-y-4 max-w-2xl mx-auto">
+                <h1
+                    class="text-4xl md:text-5xl font-bold tracking-tight text-foreground"
+                >
+                    Projects
+                </h1>
+                <p class="text-xl text-muted-foreground">
+                    Selected works from the past few years. From open source
+                    utilities to full-stack applications.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {
+                    projects.map((project) => (
+                        <a
+                            href={project.link}
+                            class="group relative flex flex-col p-6 rounded-2xl border border-border/60 bg-card hover:bg-muted/50 hover:border-border transition-all duration-300"
+                        >
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-xs font-mono text-muted-foreground border border-border px-2 py-0.5 rounded-full">
+                                    {project.year}
+                                </span>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="text-muted-foreground group-hover:text-primary transition-colors mb-4"
+                                >
+                                    <path d="M7 7h10v10" />
+                                    <path d="M7 17L17 7" />
+                                </svg>
+                            </div>
+
+                            <h3 class="text-xl font-bold tracking-tight text-foreground mb-2 group-hover:text-primary transition-colors">
+                                {project.title}
+                            </h3>
+                            <p class="text-muted-foreground mb-6 flex-grow">
+                                {project.description}
+                            </p>
+
+                            <div class="flex flex-wrap gap-2 mt-auto">
+                                {project.tags.map((tag) => (
+                                    <span class="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded-md">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </a>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</BlogLayout>

@@ -4,8 +4,6 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 
-import react from '@astrojs/react';
-
 import tailwindcss from '@tailwindcss/vite';
 import { remarkReadingTime } from './src/lib/remark-reading-time.mjs';
 
@@ -19,8 +17,6 @@ export default defineConfig({
     mdx(),
     // Automatic sitemap generation for SEO
     sitemap(),
-    // React integration for interactive components (used in sidebar nav)
-    react(),
   ],
 
   // Markdown configuration for blog posts
@@ -46,6 +42,8 @@ export default defineConfig({
     // Define breakpoints for responsive image optimization
     // Images will be optimized for mobile (640px), tablet (1024px), and desktop (1440px)
     breakpoints: [640, 1024, 1440],
+    // Whitelist remote image domains
+    domains: ['images.unsplash.com'],
   },
 
   // Vite build tool configuration
@@ -55,14 +53,6 @@ export default defineConfig({
     build: {
       // Optimize for production performance
       cssCodeSplit: true,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // Separate vendor chunks for better caching
-            vendor: ['@astrojs/react'],
-          },
-        },
-      },
     },
     resolve: {
       // Path aliases for cleaner imports throughout the codebase

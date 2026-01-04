@@ -1,24 +1,28 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
-import { generateSlugFromTitle } from '../../lib/slug';
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import BlogPost from "../../layouts/BlogPost.astro";
+import { generateSlugFromTitle } from "../../lib/slug";
 
 export async function getStaticPaths() {
 	// Filter out drafts in production, show all in dev
-	const posts = await getCollection('blog', ({ data }) => {
+	const posts = await getCollection("blog", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
 	return posts.map((post) => ({
-		params: { slug: post.data.slug || generateSlugFromTitle(post.data.title) },
-		props: { ...post, slug: post.data.slug || generateSlugFromTitle(post.data.title) },
+		params: { slug: post.data.slug || post.id },
+		props: { ...post, slug: post.data.slug || post.id },
 	}));
 }
-type Props = CollectionEntry<'blog'> & { slug: string };
+type Props = CollectionEntry<"blog"> & { slug: string };
 
 const { slug, ...post } = Astro.props;
 const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
-<BlogPost {...post.data} slug={slug} minutesRead={remarkPluginFrontmatter.minutesRead}>
+<BlogPost
+	{...post.data}
+	slug={slug}
+	minutesRead={remarkPluginFrontmatter.minutesRead}
+>
 	<Content />
 </BlogPost>

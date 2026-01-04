@@ -1,0 +1,9 @@
+{
+  "name": "yasin-blog",
+  "compatibility_date": "2025-01-04",
+  "pages_build_output_dir": "./dist",
+  "vars": {
+    "CF_PAGES": "1",
+    "CF_PAGES_BRANCH": "dev"
+  }
+}

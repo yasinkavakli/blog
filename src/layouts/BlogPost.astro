@@ -1,14 +1,12 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
-import BaseLayout from "./BaseLayout.astro";
-import TagBadge from "../components/TagBadge.astro";
-import { Separator } from "@/components/ui/separator";
-import { XLogoTooltip } from "../components/x-logo-tooltip";
+import BlogLayout from "./BlogLayout.astro";
 
 type Props = CollectionEntry<"blog">["data"] & {
 	slug: string;
 	minutesRead?: number;
+	postLayout?: string;
 };
 
 const {
@@ -23,203 +21,480 @@ const {
 	slug,
 	draft,
 	tags: rawTags,
+	postLayout = "default",
+	heroTextColor,
 } = Astro.props;
+
+// Determine text color for overlay layout
+// 'light' means white text (for dark images), 'dark' means dark text (for light images)
+const isOverlay = postLayout.startsWith("overlay");
+const effectiveHeroTextColor =
+	heroTextColor || (postLayout === "overlay-lightImage" ? "dark" : "light");
+
+const overlayTextClass =
+	effectiveHeroTextColor === "dark" ? "text-foreground" : "text-white";
+const overlayMutedClass =
+	effectiveHeroTextColor === "dark"
+		? "text-muted-foreground"
+		: "text-white/80";
+const overlaySubtleClass =
+	effectiveHeroTextColor === "dark"
+		? "text-muted-foreground/70"
+		: "text-white/70";
+const overlayGradientClass =
+	effectiveHeroTextColor === "dark"
+		? "bg-gradient-to-t from-background/90 via-background/40 to-transparent"
+		: "bg-gradient-to-t from-black/80 via-black/30 to-transparent";
 
 // Sort tags alphabetically
 const tags = rawTags?.sort() || [];
-
-const breadcrumbs = [{ label: "Writing", href: "/blog" }, { label: title }];
 
 const ogImage = `/og/${slug}.png`;
 
 // Get the base slug (filename without extension)
 const baseSlug = slug.split("/").pop() || slug;
 
-// Helper to resolve image paths for theme-specific images (from public folder)
-const resolveThemeImagePath = (
-	imagePath: string | undefined,
-): string | undefined => {
-	if (!imagePath) return undefined;
-	if (imagePath.includes("/")) return imagePath; // Already a full path
-	// Simple filenames resolve to post-specific subfolder in public/assets
-	return `/assets/${baseSlug}/${imagePath}`;
-};
-
-// Resolve theme image paths
-const resolvedHeroImageLight = resolveThemeImagePath(
-	heroImageLight as string | undefined,
-);
-const resolvedHeroImageDark = resolveThemeImagePath(
-	heroImageDark as string | undefined,
-);
-
-// For regular heroImage, handle both Image objects and string filenames
-const isHeroImageString = typeof heroImage === "string";
-let resolvedHeroImage: any = heroImage;
-if (isHeroImageString) {
-	resolvedHeroImage = `/assets/${heroImage}`;
-}
-
-// Determine which hero image to display
-const hasThemeImages = heroImageLight || heroImageDark;
-
-// Generate structured data for blog post
 const structuredData = {
 	"@context": "https://schema.org",
 	"@type": "BlogPosting",
-	"headline": title,
-	"description": description,
-	"author": {
-		"@type": "Person",
-		"name": "Yasin Kavakli"
-	},
-	"datePublished": pubDate.toISOString(),
-	...(updatedDate && { "dateModified": updatedDate.toISOString() }),
-	...(minutesRead && { "timeRequired": `PT${minutesRead}M` }),
-	"articleSection": tags.length > 0 ? tags[0] : undefined,
-	"keywords": tags.join(", ")
+	headline: title,
+	datePublished: pubDate.toISOString(),
+	...(updatedDate && { dateModified: updatedDate.toISOString() }),
+	...(minutesRead && { timeRequired: `PT${minutesRead}M` }),
+	articleSection: tags && tags.length > 0 ? tags[0] : undefined,
+	keywords: tags && tags.length > 0 ? tags.join(", ") : undefined,
 };
 ---
 
-<BaseLayout
+<BlogLayout
 	title={title}
 	description={description}
 	ogImage={ogImage}
-	breadcrumbs={breadcrumbs}
+	transparentHeader={isOverlay}
+	headerTextColor={heroTextColor}
+	mainClass={isOverlay || ["split", "split-reverse", "full"].includes(postLayout)
+			? "p-0 max-w-none"
+			: undefined}
 >
-	<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+	<script
+		type="application/ld+json"
+		set:html={JSON.stringify(structuredData)}
+	/>
 
-	<main class="w-full max-w-3xl px-6 md:px-8">
-		<article class="my-8">
-			<header class="mb-8">
-				<h1
-					class="text-2xl md:text-3xl font-semibold tracking-tight mb-2 flex items-center gap-3"
-				>
-					{title}
-				</h1>
-				{
-					draft && (
-						<div class="mb-4">
-							<span class="inline-flex items-center rounded-md border border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-sm font-medium">
-								Draft
-							</span>
-						</div>
-					)
-				}
-				<div
-					class="flex items-center gap-2 text-muted-foreground font-mono text-xs mb-4"
-				>
-					<time datetime={pubDate.toISOString()}>
-						{
-							pubDate.toLocaleDateString("en-us", {
-								year: "numeric",
-								month: "long",
-								day: "numeric",
-							})
-						}
-					</time>
-					{
-						updatedDate && (
-							<div>
-								<span>·</span>
-								Updated on{" "}
-								<time datetime={updatedDate.toISOString()}>
-									{updatedDate.toLocaleDateString("en-us", {
+	<article class="w-full">
+		{/* OVERLAY LAYOUT */}
+		{
+			isOverlay && (
+				<div class="relative w-full h-screen min-h-[600px] mb-12 flex items-end justify-start overflow-hidden">
+					{heroImage && (
+						<>
+							{typeof heroImage === "string" ? (
+								<Image
+									src={heroImage}
+									alt=""
+									inferSize={true}
+									loading="eager"
+									fetchpriority="high"
+									class="absolute inset-0 w-full h-full object-cover"
+								/>
+							) : (
+								<Image
+									src={heroImage}
+									alt=""
+									loading="eager"
+									fetchpriority="high"
+									class="absolute inset-0 w-full h-full object-cover"
+								/>
+							)}
+							<div
+								class={`absolute inset-0 ${overlayGradientClass}`}
+							/>
+						</>
+					)}
+					<div class="relative z-10 w-full max-w-3xl mx-auto px-4 pb-16 md:pb-24">
+						<div class="w-full">
+							<div
+								class={`flex items-center gap-4 ${overlayMutedClass} font-medium mb-6`}
+							>
+								<time datetime={pubDate.toISOString()}>
+									{pubDate.toLocaleDateString("en-us", {
 										year: "numeric",
 										month: "long",
 										day: "numeric",
 									})}
 								</time>
+								{minutesRead && (
+									<>
+										<span>•</span>
+										<span>{minutesRead} min read</span>
+									</>
+								)}
 							</div>
-						)
-					}
-					{
-						minutesRead && (
+							<h1
+								class={`text-5xl md:text-7xl font-bold tracking-tight ${overlayTextClass} mb-8 text-balance drop-shadow-lg leading-[1.1]`}
+							>
+								{title}
+							</h1>
+							<div class="flex items-center gap-4">
+								<div
+									class={`flex flex-col ${overlayTextClass}`}
+								>
+									<span class="font-semibold text-lg">
+										Yasin Kavakli
+									</span>
+									<span
+										class={`${overlaySubtleClass} text-sm`}
+									>
+										Author
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)
+		}
+
+		{/* SPLIT & SPLIT REVERSE LAYOUTS */}
+		{
+			(postLayout === "split" || postLayout === "split-reverse") && (
+				<header class="max-w-[1200px] mx-auto px-6 pt-24 pb-12 md:pt-32 md:pb-20">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+						<div
+							class={
+								postLayout === "split-reverse"
+									? "md:order-1"
+									: "md:order-2"
+							}
+						>
+							<div class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-primary mb-6">
+								<span>Product</span>
+								<span class="text-muted-foreground/30 text-xs">
+									•
+								</span>
+								<time datetime={pubDate.toISOString()}>
+									{pubDate.toLocaleDateString("en-us", {
+										year: "numeric",
+										month: "long",
+										day: "numeric",
+									})}
+								</time>
+								{minutesRead && (
+									<>
+										<span class="text-muted-foreground/30 text-xs">
+											•
+										</span>
+										<span>{minutesRead} min read</span>
+									</>
+								)}
+							</div>
+							<h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-8 text-balance leading-[1.1]">
+								{title}
+							</h1>
+							<p class="text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl">
+								{description}
+							</p>
+							<div class="flex items-center gap-3">
+								<div class="h-10 w-10 rounded-full bg-muted overflow-hidden">
+									<img
+										src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100"
+										alt="Yasin Kavakli"
+										class="w-full h-full object-cover"
+									/>
+								</div>
+								<div class="flex flex-col">
+									<span class="text-sm font-bold text-foreground">
+										Yasin Kavakli
+									</span>
+									<span class="text-[12px] text-muted-foreground">
+										Author & Designer
+									</span>
+								</div>
+							</div>
+						</div>
+						<div
+							class={
+								postLayout === "split-reverse"
+									? "md:order-2"
+									: "md:order-1"
+							}
+						>
+							{heroImage && (
+								<div class="aspect-[4/5] md:aspect-square w-full relative rounded-[2rem] overflow-hidden shadow-2xl shadow-primary/5">
+									{typeof heroImage === "string" ? (
+										<Image
+											src={heroImage}
+											alt=""
+											inferSize={true}
+											loading="eager"
+											fetchpriority="high"
+											class="w-full h-full object-cover"
+										/>
+									) : (
+										<Image
+											src={heroImage}
+											alt=""
+											loading="eager"
+											fetchpriority="high"
+											class="w-full h-full object-cover"
+										/>
+									)}
+								</div>
+							)}
+						</div>
+					</div>
+				</header>
+			)
+		}
+
+		{/* STANDARD HEADER CENTERED (Wide, Full, Minimal, Classic, ToC) */}
+		{
+			!isOverlay && !["split", "split-reverse"].includes(postLayout) && (
+				<header class="max-w-3xl mx-auto px-4 text-center mb-12 pt-20 md:pt-32 min-h-[320px] flex flex-col justify-center">
+					<div class="flex items-center justify-center gap-4 text-muted-foreground mb-6">
+						<time datetime={pubDate.toISOString()}>
+							{pubDate.toLocaleDateString("en-us", {
+								year: "numeric",
+								month: "long",
+								day: "numeric",
+							})}
+						</time>
+						{minutesRead && (
 							<>
-								<span>·</span>
+								<span>•</span>
 								<span>{minutesRead} min read</span>
 							</>
-						)
-					}
-				</div>
-				{
-					tags && tags.length > 0 && (
-						<div class="flex flex-wrap gap-2">
-							{tags.map((tag) => (
-								<TagBadge tag={tag} />
-							))}
-						</div>
-					)
-				}
-			</header>
+						)}
+					</div>
+					<h1 class="text-4xl md:text-6xl font-bold tracking-tight text-foreground mb-8 text-balance">
+						{title}
+					</h1>
+					<p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+						{description}
+					</p>
+				</header>
+			)
+		}
 
-			{
-				hasThemeImages &&
-					resolvedHeroImageLight &&
-					resolvedHeroImageDark && (
-						<>
-							<img
-								src={resolvedHeroImageLight}
-								alt="Article cover image (light mode)"
-								class="w-full h-auto rounded-xl mb-8 block dark:hidden"
-								loading="eager"
-								fetchpriority="high"
-								width="1200"
-								height="630"
-							/>
-							<img
-								src={resolvedHeroImageDark}
-								alt="Article cover image (dark mode)"
-								class="w-full h-auto rounded-xl mb-8 hidden dark:block"
-								loading="eager"
-								fetchpriority="high"
-								width="1200"
-								height="630"
-							/>
-						</>
-					)
-			}
+		{/* HERO IMAGES FOR STANDARD LAYOUTS */}
 
-			{
-				!hasThemeImages && resolvedHeroImage && (
-					<>
-						{isHeroImageString ? (
-							<img
-								src={resolvedHeroImage}
-								alt="Article cover image"
-								class="w-full h-auto rounded-xl mb-8"
+		{/* FULL (100vw) */}
+		{
+			postLayout === "full" && heroImage && (
+				<div class="w-full mb-20">
+					<div class="w-full h-[60vh] md:h-[80vh] relative overflow-hidden">
+						{typeof heroImage === "string" ? (
+							<Image
+								src={heroImage}
+								alt=""
+								inferSize={true}
 								loading="eager"
 								fetchpriority="high"
-								width="1200"
-								height="630"
+								class="w-full h-full object-cover"
 							/>
 						) : (
 							<Image
-								src={resolvedHeroImage}
-								alt="Article cover image"
-								class="w-full h-auto rounded-xl mb-8"
+								src={heroImage}
+								alt=""
 								loading="eager"
 								fetchpriority="high"
+								class="w-full h-full object-cover"
 							/>
 						)}
-					</>
+					</div>
+				</div>
+			)
+		}
+
+		{/* WIDE (Max width but wider than content) */}
+		{
+			postLayout === "wide" && heroImage && (
+				<div class="w-full max-w-[1200px] mx-auto mb-16 px-6">
+					<div class="aspect-[21/9] w-full relative rounded-3xl overflow-hidden shadow-sm">
+						{typeof heroImage === "string" ? (
+							<Image
+								src={heroImage}
+								alt=""
+								inferSize={true}
+								loading="eager"
+								fetchpriority="high"
+								class="w-full h-full object-cover"
+							/>
+						) : (
+							<Image
+								src={heroImage}
+								alt=""
+								loading="eager"
+								fetchpriority="high"
+								class="w-full h-full object-cover"
+							/>
+						)}
+					</div>
+				</div>
+			)
+		}
+
+		{/* CLASSIC (Content width) */}
+		{
+			postLayout === "classic" && heroImage && (
+				<div class="w-full max-w-3xl mx-auto mb-16 px-4">
+					<div class="aspect-video w-full relative rounded-2xl overflow-hidden shadow-sm border border-border">
+						{typeof heroImage === "string" ? (
+							<Image
+								src={heroImage}
+								alt=""
+								inferSize={true}
+								loading="eager"
+								fetchpriority="high"
+								class="w-full h-full object-cover"
+							/>
+						) : (
+							<Image
+								src={heroImage}
+								alt=""
+								loading="eager"
+								fetchpriority="high"
+								class="w-full h-full object-cover"
+							/>
+						)}
+					</div>
+				</div>
+			)
+		}
+
+		{/* MAIN CONTENT AREA */}
+		<div
+			class={`mx-auto px-4 mb-32 ${
+				["split", "split-reverse"].includes(postLayout)
+					? "max-w-3xl mt-16 md:mt-24"
+					: postLayout === "toc"
+						? "max-w-[1400px] flex gap-8 relative items-start justify-center"
+						: "max-w-3xl"
+			}`}
+		>
+			{/* LEFT SIDEBAR (Socials) - ONLY FOR TOC LAYOUT */}
+			{
+				postLayout === "toc" && (
+					<aside class="hidden xl:flex flex-col gap-4 sticky top-32 w-24 shrink-0 items-end pr-4" role="complementary" aria-label="Share buttons">
+						<button
+							type="button"
+							class="h-10 w-10 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+							aria-label="Share on Twitter"
+							title="Share on Twitter"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="18"
+								height="18"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+							</svg>
+						</button>
+						<button
+							type="button"
+							class="h-10 w-10 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+							aria-label="Share on LinkedIn"
+							title="Share on LinkedIn"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="18"
+								height="18"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+								<rect x="2" y="9" width="4" height="12" />
+								<circle cx="4" cy="4" r="2" />
+							</svg>
+						</button>
+						<button
+							type="button"
+							class="h-10 w-10 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+							aria-label="Copy Link"
+							title="Copy Link"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="18"
+								height="18"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+								<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+							</svg>
+						</button>
+					</aside>
 				)
 			}
 
+			{/* CONTENT COLUMN */}
 			<div
-				class="prose prose-neutral dark:prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-a:underline prose-a:underline-offset-4 prose-pre:bg-[#f9f9f9] dark:prose-pre:bg-[#1a1a1a] prose-code:before:content-none prose-code:after:content-none max-w-none"
+				class={`prose prose-lg dark:prose-invert w-full ${postLayout === "toc" ? "max-w-2xl" : ""}`}
 			>
 				<slot />
 			</div>
-		</article>
-		<div class="mx-auto w-full md:w-1/2 text-center">
-			<Separator dashed />
-			<div class="flex flex-col gap-2 my-8">
-				<p class="flex items-center justify-center gap-2">
-					In case of questions, reach out on <XLogoTooltip client:idle />
-				</p>
-				<p class="italic">- Yasin</p>
-			</div>
+
+			{/* RIGHT SIDEBAR (ToC) - ONLY FOR TOC LAYOUT */}
+			{
+				postLayout === "toc" && (
+					<aside class="hidden xl:block w-64 shrink-0 sticky top-32 pl-8" role="complementary" aria-label="Table of contents">
+						<div class="text-xs font-bold mb-6 tracking-widest uppercase text-muted-foreground">
+							On this page
+						</div>
+						<nav aria-label="In-page navigation" class="flex flex-col gap-3 text-sm text-muted-foreground/80 border-l border-border/50 pl-5">
+							<a
+								href="#"
+								class="hover:text-foreground hover:border-l-2 hover:border-foreground -ml-[21px] pl-5 py-0.5 transition-all block text-foreground font-medium border-l-2 border-foreground"
+							>
+								Introduction
+							</a>
+							<a
+								href="#"
+								class="hover:text-foreground hover:border-l-2 hover:border-foreground -ml-[21px] pl-5 py-0.5 transition-all block"
+							>
+								Core Principles
+							</a>
+							<a
+								href="#"
+								class="hover:text-foreground hover:border-l-2 hover:border-foreground -ml-[21px] pl-5 py-0.5 transition-all block"
+							>
+								Visual Hierarchy
+							</a>
+							<a
+								href="#"
+								class="hover:text-foreground hover:border-l-2 hover:border-foreground -ml-[21px] pl-5 py-0.5 transition-all block"
+							>
+								Typography
+							</a>
+							<a
+								href="#"
+								class="hover:text-foreground hover:border-l-2 hover:border-foreground -ml-[21px] pl-5 py-0.5 transition-all block"
+							>
+								Conclusion
+							</a>
+						</nav>
+					</aside>
+				)
+			}
 		</div>
-	</main>
-</BaseLayout>
+	</article>
+</BlogLayout>

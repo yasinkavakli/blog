@@ -1,0 +1,105 @@
+---
+import BlogLayout from "../layouts/BlogLayout.astro";
+
+const title = "Uses";
+const description =
+    "A curated list of the hardware, software, and tools I use daily.";
+
+const categories = [
+    {
+        title: "Workstation",
+        items: [
+            { name: '14" MacBook Pro', description: "M4 Pro, 48GB RAM, Silver" },
+            {
+                name: "Dough 4K Glossy",
+                description: "The best display that match my needs even though I don't like the company behind it. Currently the only 4K display in 27 inch, 144 Hz and glossy screen which is not OLED",
+            },
+            {
+                name: "Logitech MX Ergo",
+                description: "The mouse",
+            },
+        ],
+    },
+    {
+        title: "Software",
+        items: [
+            {
+                name: "VS Code",
+                description: "My editor of choice",
+            },
+            {
+                name: "Raycast",
+                description: "Productivity go brrrrr",
+            },
+            {
+                name: "Safari/Chrome",
+                description: "Safari for my personal needs and Chrome for work",
+            },
+            {
+                name: "Homebrew",
+                description: "For package management",
+            },
+            {
+                name: "Ghostty",
+                description: "The terminal emulator for macOS",
+            }
+        ],
+    },
+    {
+        title: "Audio & Video",
+        items: [
+            {
+                name: "iPhone 16 Pro",
+                description: "For high quality video calls and photography",
+            },
+            {
+                name: "Apple AirPods Pro",
+                description: "The OG ones",
+            },
+        ],
+    },
+];
+---
+
+<BlogLayout title={title} description={description}>
+    <div class="max-w-3xl mx-auto px-4 py-12 md:py-20">
+        <div class="space-y-16">
+            <div class="text-center space-y-4">
+                <h1
+                    class="text-4xl md:text-5xl font-bold tracking-tight text-foreground"
+                >
+                    Uses
+                </h1>
+                <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    A living document of the tools that power my workflow.
+                </p>
+            </div>
+
+            {
+                categories.map((category) => (
+                    <section class="space-y-6">
+                        <h2 class="text-2xl font-bold tracking-tight text-foreground border-b border-border pb-2">
+                            {category.title}
+                        </h2>
+                        <div class="grid gap-6">
+                            {category.items.map((item) => (
+                                <div class="group flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
+                                    <span class="font-semibold text-foreground min-w-[200px] group-hover:text-primary transition-colors">
+                                        {item.name}
+                                    </span>
+                                    <span class="text-muted-foreground text-sm sm:text-base">
+                                        {item.description}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                ))
+            }
+
+            <div class="text-center pt-8 text-sm text-muted-foreground">
+                <p>Last updated: January 2026</p>
+            </div>
+        </div>
+    </div>
+</BlogLayout>

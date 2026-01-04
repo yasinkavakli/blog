@@ -5,25 +5,29 @@ import { Resvg } from '@resvg/resvg-js';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Fetch Inter fonts - each weight needs its own file
-async function fetchFont(weight: number): Promise<ArrayBuffer> {
-  const response = await fetch(
-    `https://fonts.googleapis.com/css2?family=Inter:wght@${weight}&display=swap`,
-    { headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' } }
-  );
-  const css = await response.text();
-  const fontUrl = css.match(/src: url\(([^)]+)\)/)?.[1];
-  if (!fontUrl) throw new Error(`Could not find font URL for weight ${weight}`);
-  const fontResponse = await fetch(fontUrl);
-  return fontResponse.arrayBuffer();
+// Load fonts
+async function loadGeneralSansFont(filename: string): Promise<ArrayBuffer> {
+  const fontPath = path.resolve(`./public/fonts/general-sans/${filename}`);
+  return fs.readFileSync(fontPath);
 }
 
-const [interRegular, interMedium, interSemiBold, interBold, interBlack] = await Promise.all([
-  fetchFont(400),
-  fetchFont(500),
-  fetchFont(600),
-  fetchFont(700),
-  fetchFont(900),
+async function loadKhandFont(filename: string): Promise<ArrayBuffer> {
+  const fontPath = path.resolve(`./public/fonts/khand/${filename}`);
+  return fs.readFileSync(fontPath);
+}
+
+const [
+  generalSansRegular,
+  generalSansMedium,
+  generalSansSemibold,
+  khandRegular,
+  khandSemibold
+] = await Promise.all([
+  loadGeneralSansFont('GeneralSans-Regular.otf'),
+  loadGeneralSansFont('GeneralSans-Medium.otf'),
+  loadGeneralSansFont('GeneralSans-Semibold.otf'),
+  loadKhandFont('Khand-Regular.ttf'),
+  loadKhandFont('Khand-SemiBold.ttf'),
 ]);
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -35,11 +39,31 @@ export const getStaticPaths: GetStaticPaths = async () => {
     params: { slug: post.id },
     props: {
       title: post.data.title,
-      description: post.data.description,
+      description: post.data.description || '',
       breadcrumb: 'Writing',
     },
   }));
 };
+
+// Calculate optimal font size for title based on length and character count
+function calculateTitleFontSize(title: string): number {
+  const length = title.length;
+  // More granular sizing for better readability at all lengths
+  if (length <= 25) return 110;
+  if (length <= 40) return 92;
+  if (length <= 60) return 80;
+  if (length <= 80) return 72;
+  if (length <= 100) return 64;
+  return 56; // Very long titles
+}
+
+// Calculate line height based on font size
+function calculateLineHeight(fontSize: number): number {
+  if (fontSize >= 80) return 1.3;
+  if (fontSize >= 64) return 1.4;
+  if (fontSize >= 48) return 1.45;
+  return 1.5;
+}
 
 export const GET: APIRoute = async ({ props }) => {
   const { title, description, breadcrumb } = props;
@@ -49,14 +73,18 @@ export const GET: APIRoute = async ({ props }) => {
   const avatarBuffer = fs.readFileSync(avatarPath);
   const avatarBase64 = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
 
-  // Colors from your light mode theme (converted from oklch)
+  // Colors matching the site's design system (from global.css)
   const colors = {
-    background: '#ffffff',        // oklch(1 0 0)
-    sidebar: '#fafafa',           // oklch(0.985 0 0)
-    foreground: '#171717',        // oklch(0.145 0 0)
-    mutedForeground: '#737373',   // oklch(0.556 0 0)
-    border: '#e5e5e5',            // oklch(0.922 0 0)
+    background: '#ffffff',        // hsl(0 0% 100%)
+    secondary: '#f5f5f5',         // hsl(0 0% 96.1%)
+    foreground: '#0a0a0a',        // hsl(0 0% 3.9%)
+    mutedForeground: '#737373',   // hsl(0 0% 45.1%)
+    border: '#e5e5e5',            // hsl(0 0% 89.8%)
   };
+
+  const titleFontSize = calculateTitleFontSize(title);
+  const titleLineHeight = calculateLineHeight(titleFontSize);
+  const titleLength = title.length;
 
   const svg = await satori(
     {
@@ -66,12 +94,11 @@ export const GET: APIRoute = async ({ props }) => {
           display: 'flex',
           width: '100%',
           height: '100%',
-          backgroundColor: colors.sidebar,
-          padding: '40px',
-          flexDirection: 'column',
+          backgroundColor: colors.secondary,
+          padding: '32px',
         },
         children: [
-          // White content card - fills almost entire space
+          // Main card container
           {
             type: 'div',
             props: {
@@ -81,75 +108,91 @@ export const GET: APIRoute = async ({ props }) => {
                 width: '100%',
                 height: '100%',
                 backgroundColor: colors.background,
-                borderRadius: '24px',
-                border: `1px solid ${colors.border}`,
+                borderRadius: '20px',
                 overflow: 'hidden',
               },
               children: [
-                // Header with avatar + breadcrumbs
+                // Header bar with branding
                 {
                   type: 'div',
                   props: {
                     style: {
                       display: 'flex',
                       alignItems: 'center',
-                      height: '120px',
+                      justifyContent: 'space-between',
+                      padding: '28px 40px',
                       borderBottom: `1px solid ${colors.border}`,
-                      padding: '0 48px',
-                      gap: '24px',
                     },
                     children: [
-                      // Avatar
+                      // Left side: Avatar + Name
                       {
-                        type: 'img',
+                        type: 'div',
                         props: {
-                          src: avatarBase64,
-                          width: 64,
-                          height: 64,
                           style: {
-                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '16px',
                           },
+                          children: [
+                            {
+                              type: 'img',
+                              props: {
+                                src: avatarBase64,
+                                width: 48,
+                                height: 48,
+                                style: {
+                                  borderRadius: '50%',
+                                },
+                              },
+                            },
+                            {
+                              type: 'span',
+                              props: {
+                                style: {
+                                  fontFamily: 'Khand',
+                                  fontSize: '32px',
+                                  fontWeight: 600,
+                                  color: colors.foreground,
+                                },
+                                children: 'Yasin Kavakli',
+                              },
+                            },
+                          ],
                         },
                       },
-                      // Name
+                      // Right side: Breadcrumb badge
                       {
-                        type: 'span',
+                        type: 'div',
                         props: {
                           style: {
-                            fontSize: '36px',
-                            fontWeight: 600,
-                            color: colors.mutedForeground,
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '8px 20px',
+                            backgroundColor: colors.secondary,
+                            borderRadius: '100px',
                           },
-                          children: 'Yasin Kavakli',
-                        },
-                      },
-                      // Separator
-                      {
-                        type: 'span',
-                        props: {
-                          style: {
-                            fontSize: '36px',
-                            color: colors.border,
-                            margin: '0 8px',
-                          },
-                          children: '/',
-                        },
-                      },
-                      // Breadcrumb
-                      {
-                        type: 'span',
-                        props: {
-                          style: {
-                            fontSize: '36px',
-                            color: colors.mutedForeground,
-                          },
-                          children: breadcrumb,
+                          children: [
+                            {
+                              type: 'span',
+                              props: {
+                                style: {
+                                  fontFamily: 'Khand',
+                                  fontSize: '22px',
+                                  fontWeight: 600,
+                                  color: colors.mutedForeground,
+                                  textTransform: 'uppercase',
+                                  letterSpacing: '0.05em',
+                                },
+                                children: breadcrumb,
+                              },
+                            },
+                          ],
                         },
                       },
                     ],
                   },
                 },
-                // Main content with title and description
+                // Main content area with title
                 {
                   type: 'div',
                   props: {
@@ -157,26 +200,77 @@ export const GET: APIRoute = async ({ props }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       flex: 1,
-                      padding: '32px',
-                      gap: '24px',
+                      margin: '0px 48px 48px 48px',
                       justifyContent: 'center',
                     },
                     children: [
+                      // Title using Khand font
                       {
                         type: 'h1',
                         props: {
                           style: {
-                            fontSize: title.length < 20 ? '180px' : title.length < 40 ? '140px' : title.length < 60 ? '100px' : '80px',
-                            fontWeight: 900,
-                            color: '#171717',
-                            lineHeight: 1.0,
+                            fontFamily: 'Khand',
+                            fontSize: `${titleFontSize}px`,
+                            fontWeight: 600,
+                            color: colors.foreground,
+                            lineHeight: titleLineHeight,
                             margin: 0,
-                            letterSpacing: '-0.03em',
+                            letterSpacing: '-0.01em',
+                            width: '100%',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            // Restrict to 3 lines max
+                            display: '-webkit-box',
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: 'vertical',
                           },
                           children: title,
                         },
                       },
-
+                      // Optional: Description only for very short titles
+                      ...(description && description.length <= 120 && titleLength <= 40 ? [{
+                        type: 'p',
+                        props: {
+                          style: {
+                            fontFamily: 'General Sans',
+                            fontSize: '40px',
+                            fontWeight: 600,
+                            color: colors.mutedForeground,
+                            lineHeight: 1.5,
+                            margin: 0,
+                            marginTop: '24px',
+                            maxWidth: '90%',
+                          },
+                          children: description,
+                        },
+                      }] : []),
+                    ],
+                  },
+                },
+                // Footer bar with website URL
+                {
+                  type: 'div',
+                  props: {
+                    style: {
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      padding: '20px 40px',
+                      borderTop: `1px solid ${colors.border}`,
+                    },
+                    children: [
+                      {
+                        type: 'span',
+                        props: {
+                          style: {
+                            fontFamily: 'General Sans',
+                            fontSize: '24px',
+                            fontWeight: 500,
+                            color: colors.mutedForeground,
+                          },
+                          children: 'yasin.kavakli.at',
+                        },
+                      },
                     ],
                   },
                 },
@@ -191,34 +285,34 @@ export const GET: APIRoute = async ({ props }) => {
       height: 630,
       fonts: [
         {
-          name: 'Inter',
-          data: interRegular,
+          name: 'General Sans',
+          data: generalSansRegular,
           weight: 400,
-          style: 'normal',
+          style: 'normal' as const,
         },
         {
-          name: 'Inter',
-          data: interMedium,
+          name: 'General Sans',
+          data: generalSansMedium,
           weight: 500,
-          style: 'normal',
+          style: 'normal' as const,
         },
         {
-          name: 'Inter',
-          data: interSemiBold,
+          name: 'General Sans',
+          data: generalSansSemibold,
           weight: 600,
-          style: 'normal',
+          style: 'normal' as const,
         },
         {
-          name: 'Inter',
-          data: interBold,
-          weight: 700,
-          style: 'normal',
+          name: 'Khand',
+          data: khandRegular,
+          weight: 400,
+          style: 'normal' as const,
         },
         {
-          name: 'Inter',
-          data: interBlack,
-          weight: 900,
-          style: 'normal',
+          name: 'Khand',
+          data: khandSemibold,
+          weight: 600,
+          style: 'normal' as const,
         },
       ],
     }
