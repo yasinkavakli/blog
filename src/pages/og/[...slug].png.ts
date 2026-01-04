@@ -49,12 +49,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 function calculateTitleFontSize(title: string): number {
   const length = title.length;
   // More granular sizing for better readability at all lengths
-  if (length <= 25) return 100;
-  if (length <= 40) return 84;
-  if (length <= 60) return 72;
-  if (length <= 80) return 64;
-  if (length <= 100) return 56;
-  return 48; // Very long titles
+  if (length <= 25) return 110;
+  if (length <= 40) return 92;
+  if (length <= 60) return 80;
+  if (length <= 80) return 72;
+  if (length <= 100) return 64;
+  return 56; // Very long titles
 }
 
 // Calculate line height based on font size
@@ -149,7 +149,7 @@ export const GET: APIRoute = async ({ props }) => {
                               type: 'span',
                               props: {
                                 style: {
-                                  fontFamily: 'General Sans',
+                                  fontFamily: 'Khand',
                                   fontSize: '32px',
                                   fontWeight: 600,
                                   color: colors.foreground,
@@ -176,9 +176,9 @@ export const GET: APIRoute = async ({ props }) => {
                               type: 'span',
                               props: {
                                 style: {
-                                  fontFamily: 'General Sans',
+                                  fontFamily: 'Khand',
                                   fontSize: '22px',
-                                  fontWeight: 500,
+                                  fontWeight: 600,
                                   color: colors.mutedForeground,
                                   textTransform: 'uppercase',
                                   letterSpacing: '0.05em',
@@ -200,9 +200,8 @@ export const GET: APIRoute = async ({ props }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       flex: 1,
-                      margin: '8px 48px 64px 48px',
-                      justifyContent: 'flex-start',
-                      overflow: 'hidden',
+                      margin: '0px 48px 48px 48px',
+                      justifyContent: 'center',
                     },
                     children: [
                       // Title using Khand font
