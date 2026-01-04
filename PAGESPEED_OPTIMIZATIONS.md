@@ -62,11 +62,17 @@
 
 ### CSS Optimizations
 ```css
-/* Font optimization */
-@import url(...) layer(base);
+/* Font optimization - local fonts with display swap */
 @font-face {
-  font-family: 'Inter';
+  font-family: 'General Sans';
   font-display: swap;  /* Shows fallback while loading */
+  src: url('/fonts/general-sans/GeneralSans-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Khand';
+  font-display: swap;
+  src: url('/fonts/khand/Khand-SemiBold.woff2') format('woff2');
 }
 
 /* Accessibility */
@@ -87,9 +93,8 @@
   html { color-scheme: light dark; }
 </style>
 
-<!-- Font preload -->
-<link rel="preconnect" href="https://rsms.me" />
-<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+<!-- Fonts are served locally from public folder -->
+<!-- No external font CDN needed -->
 
 <!-- Structured Data -->
 <script type="application/ld+json">
@@ -104,11 +109,11 @@
   Cache-Control: public, max-age=31536000, immutable
 
 /* Fonts - 1 year cache */
-/*.woff2
+fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
 /* Images - 30 day cache */
-/og/*
+og/*
   Cache-Control: public, max-age=2592000
 
 /* HTML - always revalidate */

@@ -45,7 +45,10 @@ export default defineConfig({
     responsiveStyles: true,
     // Define breakpoints for responsive image optimization
     // Images will be optimized for mobile (640px), tablet (1024px), and desktop (1440px)
+    // Images will be optimized for mobile (640px), tablet (1024px), and desktop (1440px)
     breakpoints: [640, 1024, 1440],
+    // Whitelist remote image domains
+    domains: ['images.unsplash.com'],
   },
 
   // Vite build tool configuration

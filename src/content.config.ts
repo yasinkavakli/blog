@@ -16,7 +16,7 @@ const blog = defineCollection({
 			// Draft posts are hidden in production but visible in dev
 			draft: z.boolean().default(false),
 			// Use proper image validation for all hero images
-			heroImage: image().optional(),
+			heroImage: z.union([image(), z.string()]).optional(),
 			// heroImageLight and heroImageDark are simple string filenames, resolved to /assets/{slug}/ in layout
 			heroImageLight: z.string().optional(),
 			heroImageDark: z.string().optional(),
@@ -24,6 +24,9 @@ const blog = defineCollection({
 			tags: z.array(z.string()).optional(),
 			// Custom slug for post URL (overrides default file-based slug)
 			slug: z.string().optional(),
+			// Layout control
+			postLayout: z.string().optional(),
+			heroTextColor: z.enum(['light', 'dark']).optional(),
 		});
 	},
 });
