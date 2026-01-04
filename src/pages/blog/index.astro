@@ -1,15 +1,14 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
-import TagBadge from "../../components/TagBadge.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import { type CollectionEntry, getCollection } from "astro:content";
 import { generateSlugFromTitle } from "../../lib/slug";
 
 // Filter out drafts in production, show all in dev
-const allPosts = (await getCollection("blog", ({ data }) => {
-	return import.meta.env.PROD ? data.draft !== true : true;
-})).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const allPosts = (
+	await getCollection("blog", ({ data }) => {
+		return import.meta.env.PROD ? data.draft !== true : true;
+	})
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Redirect to home if no posts exist
 if (allPosts.length === 0) {
@@ -18,7 +17,7 @@ if (allPosts.length === 0) {
 
 // Extract and deduplicate all tags
 const allTags = Array.from(
-	new Set(allPosts.flatMap((post) => post.data.tags || []))
+	new Set(allPosts.flatMap((post) => post.data.tags || [])),
 ).sort();
 
 // Group posts by year
@@ -31,85 +30,78 @@ const postsByYear = allPosts.reduce(
 		acc[year].push(post);
 		return acc;
 	},
-	{} as Record<number, typeof posts>,
+	{} as Record<number, typeof allPosts>,
 );
 
 const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
-
-const breadcrumbs = [{ label: "Writing" }];
 ---
 
-<BaseLayout title="Writing | Yasin Kavakli" description="Thoughts on software, design, and everything in between." ogImage="/og/writing.png" breadcrumbs={breadcrumbs}>
-	<main class="w-full">
-		<div class="w-full max-w-xl px-4 mx-auto">
-			<div class="flex flex-col gap-12 pb-8">
-				<!-- Page Title -->
-				<h1 class="text-3xl font-semibold tracking-tight sr-only">Writing</h1>
-				
-				<!-- Tags Section Title -->
-				{allTags.length > 0 && (
-					<div class="flex flex-col gap-2 -mb-12">
-						<div class="text-sm font-semibold text-muted-foreground">Tags</div>
-					</div>
-				)}
-			</div>
-		</div>
+<BlogLayout
+	title="Writing | Yasin Kavakli"
+	description="Thoughts on software, design, and everything in between."
+	ogImage="/og/writing.png"
+>
+	<div class="max-w-2xl mx-auto">
+		<header class="mb-12 md:mb-16 text-center space-y-4">
+			<span
+				class="text-sm font-semibold tracking-wider text-muted-foreground uppercase"
+				>The Archive</span
+			>
+			<h1 class="text-3xl md:text-5xl font-bold tracking-tight">
+				Writing
+			</h1>
+			<p class="text-muted-foreground">
+				Thoughts on software, design, and everything in between.
+			</p>
+		</header>
 
-		<!-- Tag Badges - Full Width -->
-		{allTags.length > 0 && (
-			<section class="w-full px-4 pt-6 flex justify-center">
-				<div class="flex flex-wrap gap-2 justify-center">
-					{allTags.map((tag) => (
-						<TagBadge tag={tag} />
-					))}
-				</div>
-			</section>
-		)}
-
-		<!-- Posts - Constrained Width -->
-		<div class="w-full max-w-xl px-4 mx-auto">
-			<div class="flex flex-col gap-12 py-8">
-			<!-- Posts by Year -->
+		<!-- Posts by Year -->
+		<div class="space-y-16">
 			{
 				years.map((year) => (
-					<section class="flex flex-col gap-4">
-						<div class="text-muted-foreground text-sm select-none">
+					<section>
+						<h2 class="text-2xl font-bold mb-6 flex items-baseline gap-4">
 							{year}
-						</div>
-						<ul class="list-none p-0 m-0 flex flex-col gap-1">
-							{postsByYear[Number(year)].map((post) => (
-								<li>
-									<a
-										href={`/blog/${post.data.slug || generateSlugFromTitle(post.data.title)}/`}
-										class="flex items-center gap-2 py-1.5 group"
-									>
-										<div class="flex-1">
-											<div class="flex items-center gap-2">
-												<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2">{post.data.title}</span>
+							<span class="h-px bg-border flex-1" />
+						</h2>
+						<ul class="space-y-6">
+							{postsByYear[Number(year)].map(
+								(post: CollectionEntry<"blog">) => (
+									<li class="group">
+										<a
+											href={`/blog/${post.id}/`}
+											class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4"
+										>
+											<div class="flex-1">
+												<h3 class="text-lg font-medium group-hover:text-primary transition-colors">
+													{post.data.title}
+												</h3>
+												{post.data.draft && (
+													<span class="inline-flex items-center rounded-full border border-yellow-200 bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-800 mt-1">
+														Draft
+													</span>
+												)}
 											</div>
-											{post.data.draft && (
-												<span class="inline-flex items-center rounded-md border border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-medium mt-1">
-													Draft
-												</span>
-											)}
-										</div>
-										<span class="text-muted-foreground text-xs font-mono tracking-tight">
-											{post.data.pubDate.toLocaleDateString(
-												"en-us",
-												{
-													month: "short",
-													day: "numeric",
-												},
-											)}
-										</span>
-									</a>
-								</li>
-							))}
+											<time
+												datetime={post.data.pubDate.toISOString()}
+												class="text-sm text-muted-foreground font-mono whitespace-nowrap"
+											>
+												{post.data.pubDate.toLocaleDateString(
+													"en-us",
+													{
+														month: "short",
+														day: "numeric",
+													},
+												)}
+											</time>
+										</a>
+									</li>
+								),
+							)}
 						</ul>
 					</section>
 				))
 			}
-			</div>
 		</div>
-	</main>
-</BaseLayout>
+	</div>
+</BlogLayout>

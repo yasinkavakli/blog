@@ -1,107 +1,102 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import SocialsIllustration from "../components/SocialsIllustration.astro";
-import EmptyStateIllustration from "../components/EmptyStateIllustration.astro";
+import BlogLayout from "../layouts/BlogLayout.astro";
 import { getCollection } from "astro:content";
-import { generateSlugFromTitle } from "../lib/slug";
+import { Image } from "astro:assets";
 
-// Filter out drafts in production, show all in dev
-const posts = (await getCollection("blog", ({ data }) => {
-	return import.meta.env.PROD ? data.draft !== true : true;
-})).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = (
+	await getCollection("blog", ({ data }) => {
+		return import.meta.env.PROD ? data.draft !== true : true;
+	})
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const recentPosts = posts.slice(0, 5);
-
-const breadcrumbs = [{ label: "About" }];
+const featuredPosts = posts.slice(0, 3);
 ---
 
-<BaseLayout 
-	title="Yasin Kavakli" 
-	description="Senior developer building scalable B2B ecommerce solutions"
-	ogImage="/og/home.png" 
-	breadcrumbs={breadcrumbs}
->
-	<main class="w-full max-w-xl px-4">
-		<div class="flex flex-col gap-12 py-8">
-			<!-- About Section -->
-			<section class="flex flex-col gap-4">
-				<h1 class="text-2xl font-semibold tracking-tight">
-					Hey, I'm Yasin.
-				</h1>
-				<p class="text-muted-foreground leading-relaxed m-0">
-					I'm a senior developer building scalable B2B ecommerce
-					solutions, currently at one of Austria's biggest B2B
-					webshops.
-				</p>
-				<p class="text-muted-foreground leading-relaxed m-0">
-					I specialize in front-end development, design systems, and
-					user experience. This blog is my digital garden—a place
-					where I share my thoughts, learnings, and projects.
-				</p>
-			</section>
+<BlogLayout title="Yasin Kavakli" description="Designer, developer, and storyteller.">
+	<div class="flex flex-col gap-16 md:gap-24">
+		<!-- Hero Section -->
+		<section class="text-center max-w-2xl mx-auto space-y-6">
+			<h1
+				class="text-4xl md:text-6xl font-bold tracking-tight text-foreground"
+			>
+				Designer, <br /> Developer, Storyteller
+			</h1>
+			<p class="text-xl text-muted-foreground leading-relaxed">
+				Writing about software, design, and the things I build.
+			</p>
+		</section>
 
-			<!-- Online Section -->
-			<SocialsIllustration />
-
-			<!-- Recent Writing Section -->
-			<section class="flex flex-col gap-4">
-				<div class="text-muted-foreground text-sm select-none">
-					Writing
-				</div>
-				{
-					recentPosts.length > 0 ? (
-						<>
-							<ul class="list-none p-0 m-0 flex flex-col gap-1">
-								{recentPosts.map((post) => (
-									<li>
-										<a
-											href={`/blog/${post.data.slug || generateSlugFromTitle(post.data.title)}/`}
-											class="flex items-center gap-2 py-1.5 group"
-										>
-											<div class="flex-1">
-												<div class="flex items-center gap-2">
-													<span class="text-foreground font-medium leading-relaxed underline underline-offset-2">{post.data.title}</span>
-												</div>
-												{post.data.draft && (
-													<span class="inline-flex items-center rounded-md border border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-medium mt-1">
-														Draft
-													</span>
-												)}
-											</div>
-											<span class="text-muted-foreground text-xs font-mono tracking-tight">
-												{post.data.pubDate
-													.toLocaleDateString(
-														"en-us",
-														{
-															year: "2-digit",
-															month: "short",
-														},
-													)
-													.replace(" ", " '")}
-											</span>
-										</a>
-									</li>
-								))}
-							</ul>
+		<!-- Recent Writing -->
+		{
+			featuredPosts.length > 0 && (
+				<section>
+					<div class="flex items-center justify-between mb-8">
+						<h2 class="text-2xl font-bold">Recent Writing</h2>
+						<a
+							href="/blog"
+							class="text-sm font-medium hover:underline underline-offset-4"
+						>
+							View All
+						</a>
+					</div>
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+						{featuredPosts.map((post, index) => (
 							<a
-								href="/blog"
-								class="text-muted-foreground text-sm hover:text-foreground transition-colors w-fit underline underline-offset-2"
+								href={`/blog/${post.id}/`}
+								class="group space-y-3"
 							>
-								View all →
+								<div class="aspect-video bg-muted rounded-2xl overflow-hidden">
+									{post.data.heroImage ? (
+										typeof post.data.heroImage ===
+										"string" ? (
+											<Image
+												src={post.data.heroImage}
+												alt={post.data.title}
+												inferSize={true}
+												loading={index === 0 ? "eager" : "lazy"}
+												fetchpriority={index === 0 ? "high" : undefined}
+												class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+											/>
+										) : (
+											<div class="w-full h-full">
+												<Image
+													src={post.data.heroImage}
+													alt={post.data.title}
+													loading={index === 0 ? "eager" : "lazy"}
+													fetchpriority={index === 0 ? "high" : undefined}
+													class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+												/>
+											</div>
+										)
+									) : (
+										<div class="w-full h-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center text-muted-foreground">
+											<span class="text-4xl text-foreground font-bold opacity-10">
+												Ag.
+											</span>
+										</div>
+									)}
+								</div>
+								<div>
+									<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
+										{post.data.title}
+									</h3>
+									<p class="text-sm text-muted-foreground mt-1">
+										{post.data.pubDate.toLocaleDateString(
+											"en-US",
+											{
+												year: "numeric",
+												month: "long",
+												day: "numeric",
+											},
+										)}
+									</p>
+								</div>
 							</a>
-						</>
-					) : (
-						<div class="flex flex-col items-center gap-6 py-8">
-							<EmptyStateIllustration />
-							<p class="text-muted-foreground text-sm text-center">
-								Still drafting... Check back soon!
-							</p>
-						</div>
-					)
-				}
-			</section>
-		</div>
-	</main>
-</BaseLayout>
+						))}
+					</div>
+				</section>
+			)
+		}
+
+	</div>
+</BlogLayout>

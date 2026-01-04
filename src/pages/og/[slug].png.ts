@@ -4,25 +4,17 @@ import { Resvg } from '@resvg/resvg-js';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Fetch Inter fonts - each weight needs its own file
-async function fetchFont(weight: number): Promise<ArrayBuffer> {
-  const response = await fetch(
-    `https://fonts.googleapis.com/css2?family=Inter:wght@${weight}&display=swap`,
-    { headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' } }
-  );
-  const css = await response.text();
-  const fontUrl = css.match(/src: url\(([^)]+)\)/)?.[1];
-  if (!fontUrl) throw new Error(`Could not find font URL for weight ${weight}`);
-  const fontResponse = await fetch(fontUrl);
-  return fontResponse.arrayBuffer();
+async function loadFont(filename: string): Promise<ArrayBuffer> {
+  const fontPath = path.resolve(`./public/fonts/general-sans/${filename}`);
+  return fs.readFileSync(fontPath);
 }
 
-const [interRegular, interMedium, interSemiBold, interBold, interBlack] = await Promise.all([
-  fetchFont(400),
-  fetchFont(500),
-  fetchFont(600),
-  fetchFont(700),
-  fetchFont(900),
+const [generalSansLight, generalSansRegular, generalSansMedium, generalSansSemibold, generalSansBold] = await Promise.all([
+  loadFont('GeneralSans-Light.otf'),
+  loadFont('GeneralSans-Regular.otf'),
+  loadFont('GeneralSans-Medium.otf'),
+  loadFont('GeneralSans-Semibold.otf'),
+  loadFont('GeneralSans-Bold.otf'),
 ]);
 
 const colors = {
@@ -204,33 +196,33 @@ async function generateOG(title: string, description: string, breadcrumb: string
       height: 630,
       fonts: [
         {
-          name: 'Inter',
-          data: interRegular,
+          name: 'General Sans',
+          data: generalSansLight,
+          weight: 300,
+          style: 'normal',
+        },
+        {
+          name: 'General Sans',
+          data: generalSansRegular,
           weight: 400,
           style: 'normal',
         },
         {
-          name: 'Inter',
-          data: interMedium,
+          name: 'General Sans',
+          data: generalSansMedium,
           weight: 500,
           style: 'normal',
         },
         {
-          name: 'Inter',
-          data: interSemiBold,
+          name: 'General Sans',
+          data: generalSansSemibold,
           weight: 600,
           style: 'normal',
         },
         {
-          name: 'Inter',
-          data: interBold,
+          name: 'General Sans',
+          data: generalSansBold,
           weight: 700,
-          style: 'normal',
-        },
-        {
-          name: 'Inter',
-          data: interBlack,
-          weight: 900,
           style: 'normal',
         },
       ],

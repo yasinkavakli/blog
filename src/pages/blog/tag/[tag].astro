@@ -1,33 +1,31 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import BlogLayout from "../../../layouts/BlogLayout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import TagBadge from "../../../components/TagBadge.astro";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog", ({ data }) => {
-		return true; // Include all posts for tag generation (including drafts)
+		return true;
 	});
 
-	// Extract all unique tags and clean them
 	const allTags = Array.from(
-		new Set(posts.flatMap((post) => post.data.tags || []))
+		new Set(posts.flatMap((post) => post.data.tags || [])),
 	)
-	.filter(tag => tag && tag.trim()) // Remove empty/null tags
-	.map(tag => tag.trim()) // Clean whitespace
-	.sort();
+		.filter((tag) => tag && tag.trim())
+		.map((tag) => tag.trim())
+		.sort();
 
-	// Create paths for each tag
 	return allTags.map((tag) => ({
 		params: { tag },
-		props: { 
+		props: {
 			tag,
-			posts: posts.filter(post => post.data.tags?.includes(tag))
+			posts: posts.filter((post) => post.data.tags?.includes(tag)),
 		},
 	}));
 }
 
 const { tag, posts } = Astro.props;
 
-// Group posts by year
 const postsByYear = posts.reduce(
 	(acc, post) => {
 		const year = post.data.pubDate.getFullYear();
@@ -37,92 +35,85 @@ const postsByYear = posts.reduce(
 		acc[year].push(post);
 		return acc;
 	},
-	{} as Record<number, typeof posts>,
+	{} as Record<number, CollectionEntry<"blog">[]>,
 );
 
 const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
-
-const breadcrumbs = [
-	{ label: "Writing", href: "/blog" },
-	{ label: `Tag: ${tag}` }
-];
 ---
 
-<BaseLayout title={`Posts tagged with "${tag}" | Yasin Kavakli`} description={`${posts.length} posts tagged with "${tag}"`} ogImage="/og/writing.png" breadcrumbs={breadcrumbs}>
-	<main class="w-full max-w-xl px-4">
-		<div class="flex flex-col gap-12 py-8">
-			<!-- Header -->
-			<section class="flex flex-col gap-2">
-				<h1 class="text-foreground m-0">Writing</h1>
-				<p class="text-muted-foreground m-0">
-					{posts.length} post{posts.length === 1 ? '' : 's'} tagged with "{tag}"
-				</p>
-			</section>
-
-			<!-- Back to all posts -->
-			<section>
-				<a 
-					href="/blog" 
-					class="text-sm text-muted-foreground hover:text-foreground underline-offset-2 hover:underline transition-colors inline-flex items-center gap-1"
+<BlogLayout
+	title={`Posts tagged with "${tag}" | Yasin Kavakli`}
+	description={`${posts.length} posts tagged with "${tag}"`}
+>
+	<div class="max-w-2xl mx-auto">
+		<header class="mb-12 md:mb-16 text-center space-y-4">
+			<div
+				class="inline-flex items-center gap-2 text-muted-foreground text-sm"
+			>
+				<a href="/blog" class="hover:text-foreground transition-colors"
+					>Writing</a
 				>
-					← Back to all posts
-				</a>
-			</section>
+				<span>/</span>
+				<span>Tag</span>
+			</div>
+			<h1 class="text-3xl md:text-5xl font-bold tracking-tight">{tag}</h1>
+			<p class="text-muted-foreground">
+				{posts.length} post{posts.length === 1 ? "" : "s"}
+			</p>
+		</header>
 
-			<!-- Posts by Year -->
-			{posts.length > 0 ? (
-				years.map((year) => (
-					<section class="flex flex-col gap-4">
-						<div class="text-muted-foreground text-sm select-none">
-							{year}
-						</div>
-						<ul class="list-none p-0 m-0 flex flex-col gap-1">
-							{postsByYear[Number(year)].map((post) => (
-								<li>
-									<a
-										href={`/blog/${post.data.slug || post.id}/`}
-										class="flex items-center gap-2 py-1.5 group"
-									>
-										<div class="flex-1">
-											<div class="flex items-center gap-2">
-												<span class="text-foreground font-medium leading-relaxed group-hover:underline underline-offset-2">{post.data.title}</span>
+		<div class="space-y-16">
+			{
+				posts.length > 0 ? (
+					years.map((year) => (
+						<section>
+							<h2 class="text-2xl font-bold mb-6 flex items-baseline gap-4">
+								{year}
+								<span class="h-px bg-border flex-1" />
+							</h2>
+							<ul class="space-y-6">
+								{postsByYear[Number(year)].map((post) => (
+									<li class="group">
+										<a
+											href={`/blog/${post.id}/`}
+											class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4"
+										>
+											<div class="flex-1">
+												<h3 class="text-lg font-medium group-hover:text-primary transition-colors">
+													{post.data.title}
+												</h3>
 											</div>
-											{post.data.draft && (
-												<span class="inline-flex items-center rounded-md border border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-medium mt-1">
-													Draft
-												</span>
-											)}
-										</div>
-										<span class="text-muted-foreground text-xs font-mono tracking-tight">
-											{post.data.pubDate.toLocaleDateString(
-												"en-us",
-												{
-													month: "short",
-													day: "numeric",
-												},
-											)}
-										</span>
-									</a>
-								</li>
-							))}
-						</ul>
-					</section>
-				))
-			) : (
-				<section class="flex flex-col gap-4 py-8">
-					<div class="text-center text-muted-foreground">
-						No posts found tagged with "{tag}"
-					</div>
-					<div class="text-center">
-						<a 
-							href="/blog" 
-							class="text-sm text-foreground hover:underline underline-offset-2 transition-colors"
+											<time
+												datetime={post.data.pubDate.toISOString()}
+												class="text-sm text-muted-foreground font-mono whitespace-nowrap"
+											>
+												{post.data.pubDate.toLocaleDateString(
+													"en-us",
+													{
+														month: "short",
+														day: "numeric",
+													},
+												)}
+											</time>
+										</a>
+									</li>
+								))}
+							</ul>
+						</section>
+					))
+				) : (
+					<div class="text-center py-12 text-muted-foreground">
+						No posts found.
+						<br />
+						<a
+							href="/blog"
+							class="text-primary hover:underline mt-4 inline-block"
 						>
 							View all posts
 						</a>
 					</div>
-				</section>
-			)}
+				)
+			}
 		</div>
-	</main>
-</BaseLayout>
+	</div>
+</BlogLayout>
