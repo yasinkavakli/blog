@@ -88,16 +88,18 @@ const jsonLd = {
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
 
-<!-- Preconnect to external origins -->
+<!-- Preconnect and preload fonts -->
 <link rel="dns-prefetch" href="https://images.unsplash.com" />
 <link rel="dns-prefetch" href="https://rsms.me" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://rsms.me" crossorigin />
 
+<!-- Preload fonts for faster rendering -->
+<link rel="preload" as="style" href="https://rsms.me/inter/inter.css" />
+
 <!-- Fonts loaded with font-display swap -->
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
