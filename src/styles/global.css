@@ -250,14 +250,15 @@
 
 	.prose :where(a) {
 		@apply text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground transition-colors;
+		color: hsl(var(--foreground));
 	}
 
 	.prose :where(a:visited) {
-		@apply text-foreground;
+		color: hsl(var(--foreground));
 	}
 
 	.prose :where(a:link) {
-		@apply text-foreground;
+		color: hsl(var(--foreground));
 	}
 
 	.prose :where(ul, ol) {
