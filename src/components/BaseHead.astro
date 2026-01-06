@@ -20,16 +20,14 @@ const { title, description, image = "/og/default.png" } = Astro.props;
 
 <!-- Preconnect to external origins -->
 <link rel="dns-prefetch" href="https://images.unsplash.com" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://rsms.me">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<!-- Preload critical resources -->
-<link rel="preload" href="/_astro/_slug_.DKBKiS1O.css" as="style">
+<!-- Fonts are preconnected and loaded with display swap for optimal performance -->
 
-<!-- Fonts loaded with font-display swap -->
+<!-- Fonts loaded locally with font-display swap -->
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+<link rel="stylesheet" href="/fonts/inter/inter.css">
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -58,33 +56,13 @@ const { title, description, image = "/og/default.png" } = Astro.props;
 
 <!-- Theme Script -->
 <script is:inline>
-    const getThemePreference = () => {
-        if (
-            typeof localStorage !== "undefined" &&
-            localStorage.getItem("theme")
-        ) {
-            return localStorage.getItem("theme");
+    const t = localStorage.getItem("theme") || "system";
+    const d = t === "dark" || (t === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.toggle("dark", d);
+    document.documentElement.setAttribute("data-theme", t);
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
+        if ((localStorage.getItem("theme") || "system") === "system") {
+            document.documentElement.classList.toggle("dark", e.matches);
         }
-        return "system";
-    };
-    const theme = getThemePreference();
-    const isDark =
-        theme === "dark" ||
-        (theme === "system" &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches);
-
-    document.documentElement.classList[isDark ? "add" : "remove"]("dark");
-    document.documentElement.setAttribute("data-theme", theme);
-
-    // Listen for system theme changes if no user override
-    window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", (e) => {
-            const currentTheme = localStorage.getItem("theme") || "system";
-            if (currentTheme === "system") {
-                document.documentElement.classList[
-                    e.matches ? "add" : "remove"
-                ]("dark");
-            }
-        });
+    });
 </script>
