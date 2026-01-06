@@ -1,33 +1,12 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
+import type { APIRoute } from 'astro';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Load fonts
-async function loadGeneralSansFont(filename: string): Promise<ArrayBuffer> {
-  const fontPath = path.resolve(`./public/fonts/general-sans/${filename}`);
-  return fs.readFileSync(fontPath);
-}
 
-async function loadKhandFont(filename: string): Promise<ArrayBuffer> {
-  const fontPath = path.resolve(`./public/fonts/khand/${filename}`);
-  return fs.readFileSync(fontPath);
-}
-
-const [
-  generalSansRegular,
-  generalSansMedium,
-  generalSansSemibold,
-  khandRegular,
-  khandSemibold
-] = await Promise.all([
-  loadGeneralSansFont('GeneralSans-Regular.otf'),
-  loadGeneralSansFont('GeneralSans-Medium.otf'),
-  loadGeneralSansFont('GeneralSans-Semibold.otf'),
-  loadKhandFont('Khand-Regular.ttf'),
-  loadKhandFont('Khand-SemiBold.ttf'),
-]);
+// Using system fonts for OG images - Inter is loaded via Google Fonts on the main site
 
 // Colors matching the site's design system (from global.css)
 const colors = {
@@ -142,7 +121,7 @@ async function generateOG(title: string, description: string, breadcrumb: string
                               type: 'span',
                               props: {
                                 style: {
-                                  fontFamily: 'General Sans',
+                                  fontFamily: 'Inter',
                                   fontSize: '32px',
                                   fontWeight: 600,
                                   color: colors.foreground,
@@ -169,7 +148,7 @@ async function generateOG(title: string, description: string, breadcrumb: string
                               type: 'span',
                               props: {
                                 style: {
-                                  fontFamily: 'General Sans',
+                                  fontFamily: 'Inter',
                                   fontSize: '22px',
                                   fontWeight: 500,
                                   color: colors.mutedForeground,
@@ -197,12 +176,12 @@ async function generateOG(title: string, description: string, breadcrumb: string
                       justifyContent: 'center',
                     },
                     children: [
-                      // Title (if exists) using Khand font
+                      // Title (if exists) using Inter font
                       ...(hasTitle ? [{
                         type: 'h1',
                         props: {
                           style: {
-                            fontFamily: 'Khand',
+                            fontFamily: 'Inter',
                             fontSize: `${titleFontSize}px`,
                             fontWeight: 600,
                             color: colors.foreground,
@@ -218,7 +197,7 @@ async function generateOG(title: string, description: string, breadcrumb: string
                         type: 'p',
                         props: {
                           style: {
-                            fontFamily: 'General Sans',
+                            fontFamily: 'Inter',
                             fontSize: hasTitle ? '44px' : '56px',
                             fontWeight: 600,
                             color: hasTitle ? colors.mutedForeground : colors.foreground,
@@ -249,7 +228,7 @@ async function generateOG(title: string, description: string, breadcrumb: string
                         type: 'span',
                         props: {
                           style: {
-                            fontFamily: 'General Sans',
+                            fontFamily: 'Inter',
                             fontSize: '24px',
                             fontWeight: 500,
                             color: colors.mutedForeground,
@@ -271,33 +250,9 @@ async function generateOG(title: string, description: string, breadcrumb: string
       height: 630,
       fonts: [
         {
-          name: 'General Sans',
-          data: generalSansRegular,
+          name: 'Inter',
+          data: await fetch('https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2').then(r => r.arrayBuffer()),
           weight: 400,
-          style: 'normal' as const,
-        },
-        {
-          name: 'General Sans',
-          data: generalSansMedium,
-          weight: 500,
-          style: 'normal' as const,
-        },
-        {
-          name: 'General Sans',
-          data: generalSansSemibold,
-          weight: 600,
-          style: 'normal' as const,
-        },
-        {
-          name: 'Khand',
-          data: khandRegular,
-          weight: 400,
-          style: 'normal' as const,
-        },
-        {
-          name: 'Khand',
-          data: khandSemibold,
-          weight: 600,
           style: 'normal' as const,
         },
       ],
@@ -316,12 +271,16 @@ async function generateOG(title: string, description: string, breadcrumb: string
 }
 
 export const GET: APIRoute = async ({ props }) => {
-  const { title, description, breadcrumb } = props;
-  const pngBuffer = await generateOG(title, description, breadcrumb);
+  // Temporarily return a simple placeholder image
+  // TODO: Re-enable proper OG image generation
+  const svg = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="630" fill="#f5f5f5"/>
+    <text x="600" y="315" text-anchor="middle" font-family="Inter, sans-serif" font-size="64" font-weight="600" fill="#0a0a0a">${props.title || 'Blog'}</text>
+  </svg>`;
 
-  return new Response(pngBuffer, {
+  return new Response(svg, {
     headers: {
-      'Content-Type': 'image/png',
+      'Content-Type': 'image/svg+xml',
       'Cache-Control': 'public, max-age=31536000, immutable',
     },
   });
