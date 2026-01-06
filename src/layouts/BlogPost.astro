@@ -67,14 +67,15 @@ const structuredData = {
 ---
 
 <BlogLayout
-	title={title}
-	description={description}
-	ogImage={ogImage}
-	transparentHeader={isOverlay}
-	headerTextColor={heroTextColor}
-	mainClass={isOverlay || ["split", "split-reverse", "full"].includes(postLayout)
-			? "p-0 max-w-none"
-			: undefined}
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  type="article"
+  transparentHeader={isOverlay}
+  headerTextColor={heroTextColor}
+  mainClass={isOverlay || ["split", "split-reverse", "full"].includes(postLayout)
+  		? "p-0 max-w-none"
+  		: undefined}
 >
 	<script
 		type="application/ld+json"

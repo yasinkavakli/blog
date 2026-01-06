@@ -10,6 +10,7 @@ interface Props {
     mainClass?: string;
     transparentHeader?: boolean;
     headerTextColor?: "light" | "dark";
+    type?: "website" | "article";
 }
 
 const {
@@ -19,13 +20,14 @@ const {
     mainClass,
     transparentHeader = false,
     headerTextColor,
+    type = "website",
 } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead title={title} description={description} image={ogImage} />
+        <BaseHead title={title} description={description} image={ogImage} type={type} />
     </head>
     <body
         class="bg-background text-foreground antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen"

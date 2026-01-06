@@ -5,25 +5,95 @@ interface Props {
     title: string;
     description: string;
     image?: string;
+    type?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = "/og/default.png" } = Astro.props;
+const { title, description, image = "/og/default.png", type = "website" } = Astro.props;
+
+// JSON-LD Structured Data
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": type === "article" ? "BlogPosting" : "WebSite",
+    "name": "Yasin Kavakli",
+    "url": canonicalURL.toString(),
+    "description": description,
+    "inLanguage": "en-US",
+    "isAccessibleForFree": true,
+    "author": {
+        "@type": "Person",
+        "name": "Yasin Kavakli",
+        "url": "https://yasin.kavakli.at"
+    },
+    "publisher": {
+        "@type": "Person",
+        "name": "Yasin Kavakli",
+        "url": "https://yasin.kavakli.at"
+    }
+};
 ---
+
+<!-- Critical inline CSS to prevent CLS -->
+<style is:inline>
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 0 0% 96.1%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96.1%;
+        --muted-foreground: 0 0% 35%;
+        --accent: 0 0% 96.1%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 89.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+    }
+
+    .dark {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 70%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+    }
+</style>
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
 
 <!-- Preconnect to external origins -->
 <link rel="dns-prefetch" href="https://images.unsplash.com" />
+<link rel="dns-prefetch" href="https://rsms.me" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-<!-- Fonts are preconnected and loaded with display swap for optimal performance -->
+<link rel="preconnect" href="https://rsms.me" crossorigin />
 
 <!-- Fonts loaded with font-display swap -->
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -38,11 +108,12 @@ const { title, description, image = "/og/default.png" } = Astro.props;
 <meta name="description" content={description} />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={type} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:site_name" content="Yasin Kavakli" />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
@@ -53,6 +124,9 @@ const { title, description, image = "/og/default.png" } = Astro.props;
 
 <!-- Favicon -->
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
 <!-- Theme Script -->
 <script is:inline>
