@@ -24,9 +24,19 @@ const { title, description, image = "/og/default.png" } = Astro.props;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://rsms.me">
 
-<!-- Fonts loaded via Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=optional" rel="stylesheet">
-<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+<!-- Fonts loaded asynchronously -->
+<script is:inline>
+  // Load fonts asynchronously to prevent render blocking
+  const link1 = document.createElement('link');
+  link1.rel = 'stylesheet';
+  link1.href = 'https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap';
+  document.head.appendChild(link1);
+
+  const link2 = document.createElement('link');
+  link2.rel = 'stylesheet';
+  link2.href = 'https://rsms.me/inter/inter.css';
+  document.head.appendChild(link2);
+</script>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
