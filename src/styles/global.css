@@ -252,6 +252,14 @@
 		@apply text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground transition-colors;
 	}
 
+	.prose :where(a:visited) {
+		@apply text-foreground;
+	}
+
+	.prose :where(a:link) {
+		@apply text-foreground;
+	}
+
 	.prose :where(ul, ol) {
 		@apply pl-6 my-6;
 	}
