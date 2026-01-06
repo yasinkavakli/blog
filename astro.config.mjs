@@ -46,14 +46,15 @@ export default defineConfig({
     domains: ['images.unsplash.com'],
   },
 
-  // Vite build tool configuration
-  vite: {
-    // Tailwind CSS plugin for utility-first styling
-    plugins: [tailwindcss()],
-    build: {
-      // Optimize for production performance
-      cssCodeSplit: true,
-    },
+   // Vite build tool configuration
+   vite: {
+     // Tailwind CSS plugin for utility-first styling
+     plugins: [tailwindcss()],
+     build: {
+       // Optimize for production performance
+       cssCodeSplit: true,
+       cssMinify: true,
+     },
     resolve: {
       // Path aliases for cleaner imports throughout the codebase
       alias: {
