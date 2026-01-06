@@ -248,17 +248,17 @@
 		@apply font-semibold text-foreground;
 	}
 
-	.prose :where(a) {
+	.prose a {
 		@apply text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground transition-colors;
-		color: hsl(var(--foreground));
+		color: hsl(var(--foreground)) !important;
 	}
 
-	.prose :where(a:visited) {
-		color: hsl(var(--foreground));
+	.prose a:visited {
+		color: hsl(var(--foreground)) !important;
 	}
 
-	.prose :where(a:link) {
-		color: hsl(var(--foreground));
+	.prose a:link {
+		color: hsl(var(--foreground)) !important;
 	}
 
 	.prose :where(ul, ol) {
