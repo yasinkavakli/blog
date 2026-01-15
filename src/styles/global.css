@@ -231,10 +231,6 @@
 		font-weight: 400;
 	}
 
-	h1 {
-		@apply !text-primary;
-	}
-
 	h2 {
 		@apply text-4xl font-semibold;
 	}
@@ -275,6 +271,6 @@
 	em,
 	em strong,
 	.prose em {
-		@apply !text-primary;
+		@apply !font-serif;
 	}
 }
