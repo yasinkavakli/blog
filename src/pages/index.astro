@@ -16,12 +16,11 @@ const featuredPosts = posts.slice(0, 3);
 	<div class="flex flex-col gap-16 md:gap-24">
 		<!-- Hero Section -->
 		<section class="text-center max-w-2xl mx-auto space-y-6">
-			<h1
-				class="text-4xl md:text-6xl font-bold tracking-tight text-foreground"
+			<h2
 			>
 				Welcome stranger
-			</h1>
-			<p class="text-xl text-muted-foreground leading-relaxed">
+			</h2>
+			<p class="text-muted-foreground leading-relaxed">
 				Writing about software, design, and the things I build.
 			</p>
 		</section>
@@ -39,47 +38,16 @@ const featuredPosts = posts.slice(0, 3);
 							View All
 						</a>
 					</div>
-					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 						{featuredPosts.map((post, index) => (
 							<a
 								href={`/blog/${post.id}/`}
 								class="group space-y-3"
 							>
-								<div class="aspect-video bg-muted rounded-2xl overflow-hidden">
-									{post.data.heroImage ? (
-										typeof post.data.heroImage ===
-										"string" ? (
-											<Image
-												src={post.data.heroImage}
-												alt={post.data.title}
-												inferSize={true}
-												loading={index === 0 ? "eager" : "lazy"}
-												fetchpriority={index === 0 ? "high" : undefined}
-												class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-											/>
-										) : (
-											<div class="w-full h-full">
-												<Image
-													src={post.data.heroImage}
-													alt={post.data.title}
-													loading={index === 0 ? "eager" : "lazy"}
-													fetchpriority={index === 0 ? "high" : undefined}
-													class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-												/>
-											</div>
-										)
-									) : (
-										<div class="w-full h-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center text-muted-foreground">
-											<span class="text-4xl text-neutral-500 dark:text-neutral-400 font-bold">
-												Ag.
-											</span>
-										</div>
-									)}
-								</div>
 								<div>
-									<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
+									<span class="font-semibold leading-tight group-hover:text-primary transition-colors">
 										{post.data.title}
-									</h3>
+									</span>
 									<p class="text-sm text-muted-foreground mt-1">
 										{post.data.pubDate.toLocaleDateString(
 											"en-US",
