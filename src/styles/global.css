@@ -203,8 +203,7 @@
 
 @layer base {
 	* {
-		@apply border-border outline-ring/50;
-		/* font-feature-settings: 'calt' 1, 'dlig' 1, 'tnum' 1, 'ss02' 1, 'ss01' 1, 'zero' 1, 'cv10' 1, 'cv06' 1; */
+		@apply border-border outline-ring/50 tracking-tight;
 		font-feature-settings: normal;
 		font-variation-settings: normal;
 	}
@@ -227,7 +226,7 @@
 	h4,
 	h5,
 	h6 {
-		@apply font-serif;
+		@apply font-serif tracking-normal;
 		font-weight: 400;
 	}
 
@@ -271,6 +270,6 @@
 	em,
 	em strong,
 	.prose em {
-		@apply !font-serif;
+		@apply !font-serif tracking-wider;
 	}
 }
