@@ -1,0 +1,74 @@
+---
+title: Agentic yo 
+description: How I use AI for coding these days.
+pubDate: 2026-02-20
+draft: true
+tags:
+    - ai
+    - agentic
+    - coding
+heroImageLight: ../../assets/agentic-yo/hero-light.png
+heroImageDark: ../../assets/agentic-yo/hero-dark.png
+slug: agentic-yo
+postLayout: split-reverse
+---
+
+# AI here, AI there, AI everywhere
+
+Open any dev community, any YouTube feed, any Twitter thread -it's all AI. Every conversation circles back to it. A couple months ago that genuinely worried me. I've been writing code for over two decades and the thought of all that becoming irrelevant overnight? Not great.
+
+*"Developers will lose their jobs. We won't need developers in the future."* You know the takes. But here's what actually happened: **there's more to build than ever.** More products, more ideas, more ambition. The tools got better, so the bar went up.
+
+I went from skeptical to using AI every single day. Not asking ChatGPT to explain a regex -actually building things with it. Here's what that looks like in practice.
+
+## From skeptic to daily user
+
+When AI coding tools started getting popular, I resisted. I'd spent years getting good at debugging, thinking through architecture and writing clean code. Handing that over to a tool felt wrong. Like giving away the thing that made me, *me*, as a developer.
+
+Then I tried it on real work. Not a todo app demo -production code inside a big e-commerce app that generates a lot of € per month. And it clicked. It wasn't replacing me. It was taking away the parts I was tired of. The boilerplate I've written a thousand times. The afternoon-eating busywork that doesn't require any actual thinking.
+
+AI doesn't replace the craft. It just removes the friction around it.
+
+## What agentic coding actually means
+
+The term gets thrown around a lot with different definitions. To me it's pretty straightforward.
+
+Instead of autocomplete or generating a function, you give it a task. A real one. *Refactor this component to use the new API. Find the bug causing this test to fail.* And it goes and does it -reads your files, runs commands, makes changes, iterates. *Iterates* is the key word here.
+
+It's closer to pair programming with someone who never gets tired and doesn't mind when you say *"that was a little too much buddy, dial it back"*. They won't always nail it on the first try, but they're fast, and they don't take it personally when you ask them to start over.
+
+## Where I actually use it
+
+I've put a few thousand prompts through Claude Code at this point, across work and personal projects. Not because I was testing it - because it became part of how I work.
+
+**At work** I maintain a large e-commerce monorepo. Turborepo, multiple apps, shared packages, the whole shabang. The kind of codebase where migrating from ESLint to oxlint, or setting up vitest across packages, or optimizing GitHub Actions for cache hits - all of that is important work but it's not the kind of thing you want to spend a week on. I'd tell Claude Code to fix the CI pipeline, push, check the results with the `gh` CLI, fix what broke, push again. It reads tickets, checks out branches, implements features. I've literally said *"I will be afk for a while, keep an eye on the CI until it passes"* and came back to a working pipeline.
+
+Just last week I merged a refactoring PR that looked like this:
+
+![124 commits, 2462 files changed, +216k/-143k lines](/assets/agentic-yo/refactoring-pr.png)
+
+124 commits, 2462 files changed. That's not a typo. A migration like that would've taken weeks of careful manual work. With Claude Code it was a couple of intense sessions - migrating packages, fixing broken imports, updating configs, running the build, fixing what broke, repeat.
+
+**Personal projects got wild.** I wrote Raycast scripts to automate my entire dev workflow - copy a ticket URL, run a script, and it opens Chrome, VS Code, and Ghostty in tiled windows on a new space with AeroSpace. Getting window management right across macOS spaces was painful. Chrome kept opening on the wrong space. We went through osascript, Amethyst, finally landed on AeroSpace. I just kept describing what was wrong and we kept trying things until it worked.
+
+I even started building a TUI for running Claude Code in loops. It asks you questions about what you want to build, creates a task list, then runs agents against it. Building a tool to manage the tool I'm using to build things. Full circle. But of course, I abandoned it. I try to stay mostly bare minimum in Claude Code, just some good rules, skills and a structured `AGENTS.md` file (referenced in `CLAUDE.md` of course).
+
+**And this blog.** The layouts, the fonts, the color system, the OG image generation. We chased a perfect Lighthouse score for a while - going back and forth on font loading strategies, trying async loading, `font-display: swap`, external CDN, back to self-hosted. Eventually landed on self-hosted Instrument Sans with variable font files. The dark mode color palette was another rabbit hole - tweaking oklch chroma values, going too far, dialing it back. The italic text was too thin in dark mode because Instrument Serif only ships at weight 400, so we added text-stroke and switched font smoothing. Small stuff that adds up.
+
+## It's not magic though
+
+I want to be honest about this: it's not all smooth. I've screamed at my terminal more than a few times. Sometimes I say bad words to Claude, then I apologize. Sometimes I let my frustration out, then I apologize.
+
+There were moments building this blog where layouts just refused to work and I was genuinely frustrated. The AI gets things wrong. Sometimes it gets them wrong repeatedly. Sometimes it fixes one thing and breaks another.
+
+But here's what I've learned - you still need to know what you're doing. When we were fixing link contrast ratios for accessibility, I couldn't just say "make it accessible" and walk away. I had to look at the results, check if the colors worked visually, push back when the fix made things ugly. The AI does the grunt work but the taste is still yours.
+
+The barrier to generating code is basically zero now. Anyone can produce a wall of code in seconds. The difference is knowing whether it's good. Knowing when to push back. Knowing when to throw away what was generated and write it yourself.
+
+> **The developers who understand their craft will move faster. The ones who don't will just ship bugs faster.**
+
+## My setup
+
+I use Claude Code in the terminal. It reads my project, I tell it what I need, and we go from there. No copy-pasting between browser tabs and editor. It works in the context of what I'm actually building - my files, my git history, my patterns. For work it reads tickets (via the Atlassian CLI) and implements them.
+
+For personal stuff it's more freeform - I describe what I want and we figure it out together. I'm not going to pretend the workflow is perfect. Some days it's heavy usage, other days I barely touch it. But the sessions where I'm deep in it, iterating on something real across multiple files and tools - those are honestly some of the most productive hours I've had. Not because the AI does all the work. Because the friction is gone and I can focus on what actually matters.

@@ -54,6 +54,9 @@ const ogImage = `/og/${slug}.png`;
 // Get the base slug (filename without extension)
 const baseSlug = slug.split("/").pop() || slug;
 
+// Determine if any hero image is available
+const hasHero = !!(heroImage || heroImageLight);
+
 const structuredData = {
 	"@context": "https://schema.org",
 	"@type": "BlogPosting",
@@ -87,26 +90,16 @@ const structuredData = {
 		{
 			isOverlay && (
 				<div class="relative w-full h-screen min-h-[600px] mb-12 flex items-end justify-start overflow-hidden">
-					{heroImage && (
+					{hasHero && (
 						<>
-							{typeof heroImage === "string" ? (
-								<Image
-									src={heroImage}
-									alt=""
-									inferSize={true}
-									loading="eager"
-									fetchpriority="high"
-									class="absolute inset-0 w-full h-full object-cover"
-								/>
-							) : (
-								<Image
-									src={heroImage}
-									alt=""
-									loading="eager"
-									fetchpriority="high"
-									class="absolute inset-0 w-full h-full object-cover"
-								/>
-							)}
+							{heroImageLight && heroImageDark ? (
+								<>
+									<Image src={heroImageLight} alt="" loading="eager" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover block dark:hidden" />
+									<Image src={heroImageDark} alt="" loading="eager" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover hidden dark:block" />
+								</>
+							) : heroImage ? (
+								<Image src={heroImage} alt="" loading="eager" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover" />
+							) : null}
 							<div
 								class={`absolute inset-0 ${overlayGradientClass}`}
 							/>
@@ -168,11 +161,11 @@ const structuredData = {
 									: "md:order-2"
 							}
 						>
-							<div class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-primary mb-6">
-								<span>Product</span>
-								<span class="text-muted-foreground/30 text-xs">
+							<div class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-secondary mb-6">
+								{/* <span>Product</span> */}
+								{/* <span class="text-muted-foreground/30 text-xs">
 									•
-								</span>
+								</span> */}
 								<time datetime={pubDate.toISOString()}>
 									{pubDate.toLocaleDateString("en-us", {
 										year: "numeric",
@@ -198,7 +191,7 @@ const structuredData = {
 							<div class="flex items-center gap-3">
 								<div class="h-10 w-10 rounded-full bg-muted overflow-hidden">
 									<img
-										src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100"
+										src="/avatar.png"
 										alt="Yasin Kavakli"
 										class="w-full h-full object-cover"
 									/>
@@ -208,7 +201,7 @@ const structuredData = {
 										Yasin Kavakli
 									</span>
 									<span class="text-[12px] text-muted-foreground">
-										Author & Designer
+										Author & Developer
 									</span>
 								</div>
 							</div>
@@ -220,26 +213,16 @@ const structuredData = {
 									: "md:order-1"
 							}
 						>
-							{heroImage && (
-								<div class="aspect-[4/5] md:aspect-square w-full relative rounded-[2rem] overflow-hidden shadow-2xl shadow-primary/5">
-									{typeof heroImage === "string" ? (
-										<Image
-											src={heroImage}
-											alt=""
-											inferSize={true}
-											loading="eager"
-											fetchpriority="high"
-											class="w-full h-full object-cover"
-										/>
-									) : (
-										<Image
-											src={heroImage}
-											alt=""
-											loading="eager"
-											fetchpriority="high"
-											class="w-full h-full object-cover"
-										/>
-									)}
+							{hasHero && (
+								<div class="aspect-4/5 md:aspect-square w-full relative overflow-hidden shadow-2xl shadow-primary/5">
+									{heroImageLight && heroImageDark ? (
+										<>
+											<Image src={heroImageLight} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover block dark:hidden" />
+											<Image src={heroImageDark} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover hidden dark:block" />
+										</>
+									) : heroImage ? (
+										<Image src={heroImage} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover" />
+									) : null}
 								</div>
 							)}
 						</div>
@@ -251,7 +234,7 @@ const structuredData = {
 		{/* STANDARD HEADER CENTERED (Wide, Full, Minimal, Classic, ToC) */}
 		{
 			!isOverlay && !["split", "split-reverse"].includes(postLayout) && (
-				<header class="max-w-3xl mx-auto px-4 text-center mb-12 pt-20 md:pt-32 min-h-[320px] flex flex-col justify-center">
+				<header class="max-w-3xl mx-auto px-4 text-center mb-12 pt-20 md:pt-32 min-h-80 flex flex-col justify-center">
 					<div class="flex items-center justify-center gap-4 text-muted-foreground mb-6">
 						<time datetime={pubDate.toISOString()}>
 							{pubDate.toLocaleDateString("en-us", {
@@ -281,27 +264,17 @@ const structuredData = {
 
 		{/* FULL (100vw) */}
 		{
-			postLayout === "full" && heroImage && (
+			postLayout === "full" && hasHero && (
 				<div class="w-full mb-20">
 					<div class="w-full h-[60vh] md:h-[80vh] relative overflow-hidden">
-						{typeof heroImage === "string" ? (
-							<Image
-								src={heroImage}
-								alt=""
-								inferSize={true}
-								loading="eager"
-								fetchpriority="high"
-								class="w-full h-full object-cover"
-							/>
-						) : (
-							<Image
-								src={heroImage}
-								alt=""
-								loading="eager"
-								fetchpriority="high"
-								class="w-full h-full object-cover"
-							/>
-						)}
+						{heroImageLight && heroImageDark ? (
+							<>
+								<Image src={heroImageLight} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover block dark:hidden" />
+								<Image src={heroImageDark} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover hidden dark:block" />
+							</>
+						) : heroImage ? (
+							<Image src={heroImage} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover" />
+						) : null}
 					</div>
 				</div>
 			)
@@ -309,27 +282,17 @@ const structuredData = {
 
 		{/* WIDE (Max width but wider than content) */}
 		{
-			postLayout === "wide" && heroImage && (
+			postLayout === "wide" && hasHero && (
 				<div class="w-full max-w-[1200px] mx-auto mb-16 px-6">
-					<div class="aspect-[21/9] w-full relative rounded-3xl overflow-hidden shadow-sm">
-						{typeof heroImage === "string" ? (
-							<Image
-								src={heroImage}
-								alt=""
-								inferSize={true}
-								loading="eager"
-								fetchpriority="high"
-								class="w-full h-full object-cover"
-							/>
-						) : (
-							<Image
-								src={heroImage}
-								alt=""
-								loading="eager"
-								fetchpriority="high"
-								class="w-full h-full object-cover"
-							/>
-						)}
+					<div class="aspect-21/9 w-full relative rounded-3xl overflow-hidden shadow-sm">
+						{heroImageLight && heroImageDark ? (
+							<>
+								<Image src={heroImageLight} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover block dark:hidden" />
+								<Image src={heroImageDark} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover hidden dark:block" />
+							</>
+						) : heroImage ? (
+							<Image src={heroImage} alt="" loading="eager" fetchpriority="high" class="w-full h-full object-cover" />
+						) : null}
 					</div>
 				</div>
 			)
@@ -337,27 +300,35 @@ const structuredData = {
 
 		{/* CLASSIC (Content width) */}
 		{
-			postLayout === "classic" && heroImage && (
+			postLayout === "classic" && (heroImage || heroImageLight) && (
 				<div class="w-full max-w-3xl mx-auto mb-16 px-4">
 					<div class="aspect-video w-full relative rounded-2xl overflow-hidden shadow-sm border border-border">
-						{typeof heroImage === "string" ? (
+						{heroImageLight && heroImageDark ? (
+							<>
+								<Image
+									src={heroImageLight}
+									alt=""
+									loading="eager"
+									fetchpriority="high"
+									class="w-full h-full object-cover block dark:hidden"
+								/>
+								<Image
+									src={heroImageDark}
+									alt=""
+									loading="eager"
+									fetchpriority="high"
+									class="w-full h-full object-cover hidden dark:block"
+								/>
+							</>
+						) : heroImage ? (
 							<Image
 								src={heroImage}
 								alt=""
-								inferSize={true}
 								loading="eager"
 								fetchpriority="high"
 								class="w-full h-full object-cover"
 							/>
-						) : (
-							<Image
-								src={heroImage}
-								alt=""
-								loading="eager"
-								fetchpriority="high"
-								class="w-full h-full object-cover"
-							/>
-						)}
+						) : null}
 					</div>
 				</div>
 			)
@@ -449,7 +420,7 @@ const structuredData = {
 
 			{/* CONTENT COLUMN */}
 			<div
-				class={`prose dark:prose-invert w-full ${postLayout === "toc" ? "max-w-2xl" : ""}`}
+				class={`prose prose-lg dark:prose-invert w-full ${postLayout === "toc" ? "max-w-2xl" : ""}`}
 			>
 				<slot />
 			</div>

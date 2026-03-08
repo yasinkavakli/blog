@@ -15,11 +15,9 @@ const blog = defineCollection({
 			updatedDate: z.coerce.date().optional(),
 			// Draft posts are hidden in production but visible in dev
 			draft: z.boolean().default(false),
-			// Use proper image validation for all hero images
-			heroImage: z.union([image(), z.string()]).optional(),
-			// heroImageLight and heroImageDark are simple string filenames, resolved to /assets/{slug}/ in layout
-			heroImageLight: z.string().optional(),
-			heroImageDark: z.string().optional(),
+			heroImage: image().optional(),
+			heroImageLight: image().optional(),
+			heroImageDark: image().optional(),
 			// Tags for categorizing posts
 			tags: z.array(z.string()).optional(),
 			// Custom slug for post URL (overrides default file-based slug)
