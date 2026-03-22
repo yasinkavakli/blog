@@ -66,7 +66,7 @@ export default defineConfig({
     },
   },
 
-  preview: {
+  server: {
     // This just allows preview to run in primcloud (not primclouds fault)
     allowedHosts: true
   },
