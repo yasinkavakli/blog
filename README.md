@@ -21,7 +21,7 @@ A modern, lightweight blog built with [Astro](https://astro.build), featuring da
 
 ### Prerequisites
 - Node.js 18+
-- pnpm (or npm/yarn)
+- pnpm 10+
 
 ### Installation
 
