@@ -52,7 +52,7 @@ export default defineConfig({
      plugins: [tailwindcss()],
      preview: {
        // This just allows preview to run in primcloud (not primclouds failt)
-       allowedHosts: true
+       allowedHosts: ['blog-yasinkavakli.primcloud.app']
      },
      build: {
        // Optimize for production performance
