@@ -25,5 +25,6 @@
     "@tailwindcss/vite": "^4.2.1",
     "tailwindcss": "^4.2.1",
     "wrangler": "^4.73.0"
-  }
+  },
+  "packageManager": "pnpm"
 }
