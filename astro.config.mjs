@@ -50,6 +50,10 @@ export default defineConfig({
    vite: {
      // Tailwind CSS plugin for utility-first styling
      plugins: [tailwindcss()],
+     preview: {
+       // This just allows preview to run in primcloud (not primclouds failt)
+       allowedHosts: true
+     },
      build: {
        // Optimize for production performance
        cssCodeSplit: true,
